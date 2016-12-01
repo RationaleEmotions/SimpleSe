@@ -1,0 +1,286 @@
+# SimpleSe Page-objects
+
+In English you would read this as **Simple _Se_**-lenium **Page Objects**.
+
+We decided to sound a bit desi as well. So in **Hindi** you would just read this name as **Simple sey page objects**.
+
+## What's with the name ?
+
+Obviously we wanted to associated with **Selenium** which explains the suffix **_Se_**.
+
+This library is called as **SimpleSe** because it attempts at providing a simple way to work with page objects.
+
+## What's in it for me ?
+
+Page objects as a concept has been built by different people in different ways.
+This library attempts at building page objects keeping in mind the following things:
+
+* Simple to use (try staying away from complex approaches)
+* De-couple the java code from the locators so that a locator change would merely warrant a change in the 
+externalised data source (JSON file in our case)
+* Support localization i.e., being able to define locators for different countries and still have a unified way of 
+working with the html elements.
+* Support a simple way of expressing *explicit waits* in **Selenium**. E.g., would include 
+
+   * Wait for `30 seconds` for a particular element to show up before interacting with it.
+   * Wait for an additional `x seconds` for a particular element to become clickable.
+
+## The JSON Structure
+
+At the heart of this project is the JSON file that contains all your locators information.
+The intent is to define one `JSON` file per page. So if your UI automation flow has 10 pages, then effectively you 
+would define *10 pages* respectively.
+Here's how a typical JSON file that represents the locators could look like :
+
+```json
+{
+  "name": "FooPage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "bar",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "//h1"
+        }
+      ],
+      "wait": {
+        "until": "visible",
+        "for": 45
+      }
+    }
+  ]
+}
+```
+
+### What does each of those attributes mean ?
+
+1. `name` - **(Mandatory)** This is a user friendly name that you would be giving to your page.
+Names have to be unique so that there's no clash. 
+2. `defaultLocale` - **(Mandatory)** You would provide a fall back locale here. The expectation is that there would 
+be atleast one locale definition within `elements` that matches the value of `defaultLocale`. 
+Typical values could be `en_US` _(which suggests that for a particular element if there are no country specific 
+locators defined, then `en_US` is to be used as the fall back locale and `en_US` specific locators could be used.)_
+3. `elements` - **(Mandatory)** All your individual html elements that make up your page would go here. Every element
+ would have the following attributes.
+    1. `name` - **(Mandatory)** This is a user friendly name that you would be giving to your html element. Here again 
+  names have to be unique so that there's no clash. Typical e.g., could include `loginBtn` (or) `userNameTxtField`.
+    2. `locale` - **(Mandatory)** Represents the list of countries and their corresponding locators. Its attributes are
+   described as below.
+       1. `name` - **(Mandatory)** The name/key of the country for which the locator is being defined.
+       2. `locator` - **(Mandatory)** The actual locator which can be an xPath (or) css locator (or) id/name. Here's 
+       some conventions associated with this :
+          1. **xpath format** : Can be of the form `./input[@name='first_name']` (or) `//input[@name='first_name']` 
+          (or) `/input[@name='first_name']`
+          2. **css format** : Can be of the form `css=input[name='first_name']`
+          3. **id (or) name format** : Can be of the form `first_name` [ here `first_name` can either be the `id` of 
+          an element (or) the `name` of an element. ]
+    3. `wait` - **(Optional)** If you feel that a particular element is either a slow loading element (or) you would 
+    need to have some extra waits defined, then those go here. It can have the following attributes.
+       1. `until` - We currently support only one of the following values: 
+          * `Available` - **(case in-sensitive)** Waits for the element to be **available** in the Dom. Its 
+          functionally 
+          equivalent to `ExpectedConditions#presenceOfElementLocated` (or) 
+          `ExpectedConditions#presenceOfAllElementsLocatedBy`.
+          * `Visible` - **(case in-sensitive)** Waits for the element to be **available** in the Dom and also to be 
+          **visible**. 
+          Its functionally equivalent to `ExpectedConditions#visibilityOfElementLocated` (or) `ExpectedConditions#visibilityOfAllElementsLocatedBy`.
+          * `Clickable` - **(case in-sensitive)** Waits for the element to be **available** in the Dom and also to be
+           **clickable**. Its functionally equivalent to `ExpectedConditions#elementToBeClickable`.
+       2. `for` - An integer that represents the wait time in **seconds**. If no value is specified (or) if this 
+       attribute is omitted but `until` is included, the system falls back to `45 seconds.` This value can be altered
+        globally via the JVM argument `default.wait.time`.
+
+## Some code samples.
+
+Lets say we have the below json sample which is located in `src/test/resources/HomePage.json`. 
+
+```json
+{
+  "name": "HomePage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "heading",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "//h1[@class='heading']"
+        }
+      ],
+      "wait": {
+        "until": "visible",
+        "for": 45
+      }
+    },
+    {
+      "name": "checkboxesLink",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "//a[text()='Checkboxes']"
+        }
+      ],
+      "wait": {
+        "until": "clickable",
+        "for": 45
+      }
+    }
+  ]
+}
+```
+
+A sample code that would work with the above mentioned would look like below :
+
+```java
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.util.List;
+
+public class HerokkuAppTest {
+    private RemoteWebDriver driver;
+
+    @BeforeClass
+    public void setup() {
+        driver = new ChromeDriver();
+    }
+
+    @Test
+    public void testMethod() {
+        driver.get("http://the-internet.herokuapp.com/");
+
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
+        Label heading = homePage.getLabel("heading");
+        Assert.assertEquals(heading.getText(), "Welcome to the Internet");
+
+        Link checkbox = homePage.getLink("checkboxesLink");
+        Assert.assertEquals(checkbox.isDisplayed(), true);
+    }
+
+    @AfterClass
+    public void cleanup() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
+
+```
+
+#### A sample that shows how to work with list of elements using `Simple Se Page Objects`
+
+Lets say we have a json that looks like below located at `src/test/resources/CheckboxPage.json`
+
+```json
+{
+  "name": "CheckboxPage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "checkbox",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "//input[@type='checkbox']"
+        }
+      ],
+      "wait": {
+        "until": "visible",
+        "for": 45
+      }
+    }
+  ]
+}
+```
+
+A sample code that would work with the above mentioned would look like below (working with list of elements) :
+
+```java
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import java.util.List;
+
+public class HerokkuAppTest {
+    private RemoteWebDriver driver;
+
+    @BeforeClass
+    public void setup() {
+        driver = new ChromeDriver();
+    }
+
+    @Test
+    public void testMethod() {
+        driver.get("http://the-internet.herokuapp.com/checkboxes");
+        PageObject checkboxPage = new PageObject(driver, "src/test/resources/CheckboxPage.json");
+        List<Checkbox> checkboxList = checkboxPage.getCheckboxes("checkbox");
+        Assert.assertEquals(checkboxList.size(), 2);
+        int uncheckedCount = 0;
+        int checkedCount = 0;
+        for (Checkbox checkbox : checkboxList) {
+            if (checkbox.isChecked()) {
+                checkedCount += 1;
+            } else {
+                uncheckedCount += 1;
+            }
+        }
+        Assert.assertEquals(checkedCount, 1);
+        Assert.assertEquals(uncheckedCount, 1);
+    }
+
+    @AfterClass
+    public void cleanup() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
+```
+
+#### How to work with a different locale ?
+
+Here's a sample that shows how to create a `PageObject` for the locale `en_FR`.
+
+```java
+public class HerokkuAppTest {
+
+    @Test
+    public void testMethod() {
+        //Here we are creating a page object instance for the locale "en_FR"
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json").forLocale("en_FR");
+        //More source code goes here.
+        // ..
+    }
+}
+```
+
+#### How to work with a generic element ?
+
+Many times we may have to work with generic elements (such as date picker or a scroll bar etc) for which `Simple Se` 
+may not have anything to offer as a ready made object. But you can still regard them as `GenericElement` and work 
+with them. Here's a sample:
+
+```java
+public class HerokkuAppTest {
+
+    @Test
+    public void testMethod() {
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json").forLocale("en_FR");
+        GenericElement datePicker = homePage.getGenericElement("datePickerControl");
+    }
+}
+```

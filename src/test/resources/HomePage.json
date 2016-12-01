@@ -1,0 +1,32 @@
+{
+  "name": "HomePage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "heading",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "//h1[@class='heading']"
+        }
+      ],
+      "wait": {
+        "until": "visible",
+        "for": 45
+      }
+    },
+    {
+      "name": "checkboxesLink",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "//a[text()='Checkboxes']"
+        }
+      ],
+      "wait": {
+        "until": "clickable",
+        "for": 45
+      }
+    }
+  ]
+}

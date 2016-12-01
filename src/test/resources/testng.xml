@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Unit-test-suite" verbose="2">
+    <test name="unit-tests">
+        <classes>
+            <class name="com.github.rationaleemotions.internal.locators.StrategyTest"/>
+            <class name="com.github.rationaleemotions.pojos.JsonWebElementTest"/>
+            <class name="com.github.rationaleemotions.internal.locators.UntilTest"/>
+            <class name="com.github.rationaleemotions.page.PageObjectTest"/>
+        </classes>
+    </test>
+
+</suite>

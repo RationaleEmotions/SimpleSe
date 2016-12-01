@@ -1,0 +1,23 @@
+{
+  "name": "FooPage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "bar",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "//h1"
+        }
+      ],
+      "wait": {
+        "until": "visible",
+        "for": 45
+      }
+    }
+  ]
+}

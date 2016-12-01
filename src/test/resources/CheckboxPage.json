@@ -1,0 +1,19 @@
+{
+  "name": "CheckboxPage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "checkbox",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "//input[@type='checkbox']"
+        }
+      ],
+      "wait": {
+        "until": "visible",
+        "for": 45
+      }
+    }
+  ]
+}
