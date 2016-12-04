@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/RationaleEmotions/SimpleSe.svg?branch=master)](https://travis-ci.org/RationaleEmotions/SimpleSe)
 # SimpleSe Page-objects
 
 In English you would read this as **Simple _Se_**-lenium **Page Objects**.
