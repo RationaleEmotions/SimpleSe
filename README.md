@@ -26,6 +26,26 @@ working with the html elements.
    * Wait for `30 seconds` for a particular element to show up before interacting with it.
    * Wait for an additional `x seconds` for a particular element to become clickable.
 
+## Pre-requisites
+
+**Simple Se Page Objects** requires that you use : 
+* **JDK 8**.
+* **Selenium 3.0.1** (or) higher. 
+
+## How to use.
+
+**Simple Se Page Objects** is a [Maven](https://maven.apache.org/guides/getting-started/) artifact. In order to 
+consume it, you merely need to add the following as a dependency in your pom file.
+
+```xml
+<dependency>
+    <groupId>com.github.rationaleemotions</groupId>
+    <artifactId>simple-se-pageobjects</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+
 ## The JSON Structure
 
 At the heart of this project is the JSON file that contains all your locators information.
@@ -79,8 +99,8 @@ locators defined, then `en_US` is to be used as the fall back locale and `en_US`
           1. **xpath format** : Can be of the form `./input[@name='first_name']` (or) `//input[@name='first_name']` 
           (or) `/input[@name='first_name']`
           2. **css format** : Can be of the form `css=input[name='first_name']`
-          3. **id (or) name format** : Can be of the form `first_name` [ here `first_name` can either be the `id` of 
-          an element (or) the `name` of an element. ]
+          3. **id (or) name format** : Can be of the form `first_name` { here `first_name` can either be the `id` of 
+          an element (or) the `name` of an element. }
     3. `wait` - **(Optional)** If you feel that a particular element is either a slow loading element (or) you would 
     need to have some extra waits defined, then those go here. It can have the following attributes.
        1. `until` - We currently support only one of the following values: 
