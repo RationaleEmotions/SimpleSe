@@ -4,10 +4,10 @@
 <suite name="Unit-test-suite" verbose="2">
     <test name="unit-tests">
         <classes>
-            <class name="com.github.rationaleemotions.internal.locators.StrategyTest"/>
-            <class name="com.github.rationaleemotions.pojos.JsonWebElementTest"/>
-            <class name="com.github.rationaleemotions.internal.locators.UntilTest"/>
-            <class name="com.github.rationaleemotions.page.PageObjectTest"/>
+            <class name="com.rationaleemotions.internal.locators.StrategyTest"/>
+            <class name="com.rationaleemotions.pojos.JsonWebElementTest"/>
+            <class name="com.rationaleemotions.internal.locators.UntilTest"/>
+            <class name="com.rationaleemotions.page.PageObjectTest"/>
         </classes>
     </test>
 

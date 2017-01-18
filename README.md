@@ -39,7 +39,7 @@ consume it, you merely need to add the following as a dependency in your pom fil
 
 ```xml
 <dependency>
-    <groupId>com.github.rationaleemotions</groupId>
+    <groupId>com.rationaleemotions</groupId>
     <artifactId>simple-se-pageobjects</artifactId>
     <version>1.0.0</version>
 </dependency>
