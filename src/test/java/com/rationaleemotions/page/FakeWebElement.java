@@ -1,5 +1,6 @@
 package com.rationaleemotions.page;
 
+import com.rationaleemotions.internal.locators.Until;
 import org.openqa.selenium.*;
 
 import java.util.List;
@@ -8,6 +9,14 @@ import java.util.List;
  * A Fake {@link WebElement} implementation for demonstration purposes.
  */
 public class FakeWebElement implements WebElement {
+
+    private Until until;
+    private boolean simulateFailure;
+
+    public FakeWebElement(Until until, boolean simulateFailure) {
+        this.until = until;
+        this.simulateFailure = simulateFailure;
+    }
     @Override
     public void click() {}
 
@@ -37,6 +46,10 @@ public class FakeWebElement implements WebElement {
 
     @Override
     public boolean isEnabled() {
+        if (until == Until.Clickable) {
+            //This is set only when we want to simulate failures for our tests.
+            return false;
+        }
         return true;
     }
 
@@ -57,6 +70,10 @@ public class FakeWebElement implements WebElement {
 
     @Override
     public boolean isDisplayed() {
+        if (until == Until.Visible && simulateFailure) {
+            //This is set only when we want to simulate failures for our tests.
+            return false;
+        }
         return true;
     }
 

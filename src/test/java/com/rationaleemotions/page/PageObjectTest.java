@@ -1,24 +1,18 @@
 package com.rationaleemotions.page;
 
+import com.rationaleemotions.internal.locators.Until;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
 public class PageObjectTest {
-    private WebDriver driver;
-
-    @BeforeClass
-    public void setup() {
-        driver = new FakeDriver();
-    }
 
     @Test
     public void testCheckboxCount() {
-        driver.get("http://localhost:4444");
+        WebDriver driver = new FakeDriver();
         PageObject checkboxPage = new PageObject(driver, "src/test/resources/CheckboxPage.json");
         List<Checkbox> checkboxList = checkboxPage.getCheckboxes("checkbox");
         Assert.assertEquals(checkboxList.size(), 1);
@@ -33,7 +27,7 @@ public class PageObjectTest {
 
     @Test
     public void testPageWithDifferentLocale() {
-        driver.get("http://localhost:4444");
+        WebDriver driver = new FakeDriver();
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json").forLocale("en_FR");
         Label heading = homePage.getLabel("heading");
         Assert.assertEquals(heading.getText(), "Fake text");
@@ -41,10 +35,28 @@ public class PageObjectTest {
         Assert.assertEquals(checkbox.isDisplayed(), true);
     }
 
-    @AfterClass
-    public void cleanup() {
-        if (driver != null) {
-            driver.quit();
-        }
+    @Test
+    public void testFindElementWithWaits() {
+        WebDriver driver = new FakeDriver(2, Until.Visible);
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
+        Label heading = homePage.getLabel("heading");
+        Assert.assertEquals(heading.getText(), "Fake text");
     }
+
+    @Test(expectedExceptions = TimeoutException.class,
+            expectedExceptionsMessageRegExp = "Expected condition failed: waiting for visibility of element located .*")
+    public void testFindElementsWithWaitsTimingOutVisibilityCondition() {
+        WebDriver driver = new FakeDriver(15, Until.Visible, true);
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
+        homePage.getLabel("heading");
+    }
+
+    @Test(expectedExceptions = TimeoutException.class,
+            expectedExceptionsMessageRegExp = "Expected condition failed: waiting for element to be clickable.*")
+    public void testFindElementsWithWaitsTimingoutClickableCondition() {
+        WebDriver driver = new FakeDriver(15, Until.Clickable, true);
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
+        homePage.getLink("checkboxesLink");
+    }
+
 }

@@ -4,7 +4,7 @@ import com.rationaleemotions.internal.locators.Until;
 import com.rationaleemotions.pojos.JsonWebElement;
 import com.rationaleemotions.pojos.WebPage;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.StringUtils;
+import com.rationaleemotions.utils.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;

@@ -4,7 +4,7 @@ import com.rationaleemotions.internal.locators.Until;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.commons.lang3.StringUtils;
+import com.rationaleemotions.utils.StringUtils;
 import org.openqa.selenium.By;
 
 import java.util.List;

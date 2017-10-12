@@ -12,7 +12,7 @@
       ],
       "wait": {
         "until": "visible",
-        "for": 45
+        "for": 20
       }
     },
     {
@@ -25,7 +25,7 @@
       ],
       "wait": {
         "until": "clickable",
-        "for": 45
+        "for": 20
       }
     }
   ]

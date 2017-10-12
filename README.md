@@ -30,7 +30,7 @@ working with the html elements.
 
 **Simple Se Page Objects** requires that you use : 
 * **JDK 8**.
-* **Selenium 3.0.1** (or) higher. 
+* **Selenium 3.6.0** (or) higher. 
 
 ## How to use.
 
@@ -41,7 +41,7 @@ consume it, you merely need to add the following as a dependency in your pom fil
 <dependency>
     <groupId>com.rationaleemotions</groupId>
     <artifactId>simple-se-pageobjects</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
