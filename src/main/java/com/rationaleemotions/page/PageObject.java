@@ -1,5 +1,6 @@
 package com.rationaleemotions.page;
 
+import com.google.common.base.Preconditions;
 import com.rationaleemotions.internal.locators.Until;
 import com.rationaleemotions.pojos.JsonWebElement;
 import com.rationaleemotions.pojos.WebPage;
@@ -252,8 +253,16 @@ public final class PageObject {
     }
 
     private JsonWebElement getJsonWebElement(String fieldName) {
+        if (fieldName == null || fieldName.trim().isEmpty()) {
+            throw new IllegalArgumentException("A field name cannot be null (or) empty");
+        }
         initLazily();
-        return page.getWebElement(fieldName);
+        JsonWebElement element = page.getWebElement(fieldName);
+        if (element == null) {
+            throw new IllegalArgumentException("Unable to locate element [" + fieldName +
+                    "] in the file [" + this.jsonFileSource + "]");
+        }
+        return element;
     }
 
     private RawElement newRawElement(JsonWebElement element) {

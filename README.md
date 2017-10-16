@@ -41,7 +41,7 @@ consume it, you merely need to add the following as a dependency in your pom fil
 <dependency>
     <groupId>com.rationaleemotions</groupId>
     <artifactId>simple-se-pageobjects</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 

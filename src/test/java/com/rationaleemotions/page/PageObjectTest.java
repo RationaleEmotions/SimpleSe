@@ -35,6 +35,22 @@ public class PageObjectTest {
         Assert.assertEquals(checkbox.isDisplayed(), true);
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class,
+            expectedExceptionsMessageRegExp = "Unable to locate element.*")
+    public void testInvalidElement() {
+        WebDriver driver = new FakeDriver();
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
+        homePage.getLabel("iDontExist");
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class,
+            expectedExceptionsMessageRegExp = "A field name cannot be null \\Q(\\Eor\\Q)\\E empty")
+    public void testInvalidElementWithNullValues() {
+        WebDriver driver = new FakeDriver();
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
+        homePage.getLabel("");
+    }
+
     @Test
     public void testFindElementWithWaits() {
         WebDriver driver = new FakeDriver(2, Until.Visible);
@@ -46,7 +62,7 @@ public class PageObjectTest {
     @Test(expectedExceptions = TimeoutException.class,
             expectedExceptionsMessageRegExp = "Expected condition failed: waiting for visibility of element located .*")
     public void testFindElementsWithWaitsTimingOutVisibilityCondition() {
-        WebDriver driver = new FakeDriver(15, Until.Visible, true);
+        WebDriver driver = new FakeDriver(5, Until.Visible, true);
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
         homePage.getLabel("heading");
     }
@@ -54,7 +70,7 @@ public class PageObjectTest {
     @Test(expectedExceptions = TimeoutException.class,
             expectedExceptionsMessageRegExp = "Expected condition failed: waiting for element to be clickable.*")
     public void testFindElementsWithWaitsTimingoutClickableCondition() {
-        WebDriver driver = new FakeDriver(15, Until.Clickable, true);
+        WebDriver driver = new FakeDriver(5, Until.Clickable, true);
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
         homePage.getLink("checkboxesLink");
     }
