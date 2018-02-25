@@ -83,6 +83,11 @@ public class JsonWebElementTest {
         Assert.assertEquals(actual.getClass(), expClass);
         String locator = object.get(JsonWebElement.MandatoryKeys.LOCALE).getAsJsonArray().get(0).getAsJsonObject().get(
             JsonWebElement.MandatoryKeys.LOCATOR).getAsString();
+
+        // For CSS
+        if (expClass.equals(By.ByCssSelector.class)) {
+            locator = locator.substring(4);
+        }
         Assert.assertTrue(actual.toString().contains(locator));
     }
 

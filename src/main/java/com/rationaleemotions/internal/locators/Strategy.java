@@ -33,7 +33,7 @@ public enum Strategy implements StrategyTraits {
 
         @Override
         public By getStrategy(String locator) {
-            return By.cssSelector(locator);
+            return By.cssSelector(locator.substring(4));
         }
     },
     /**
