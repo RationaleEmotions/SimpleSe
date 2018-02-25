@@ -7,7 +7,7 @@
       "locale": [
         {
           "name": "en_US",
-          "locator": "//h1[@class='heading']"
+          "locator": "css=h1[class=heading]"
         }
       ],
       "wait": {
