@@ -101,6 +101,10 @@ locators defined, then `en_US` is to be used as the fall back locale and `en_US`
           2. **css format** : Can be of the form `css=input[name='first_name']`
           3. **id (or) name format** : Can be of the form `first_name` { here `first_name` can either be the `id` of 
           an element (or) the `name` of an element. }
+          4. **class format** : Can be of the form `class=btn`
+          5. **linkText format** : Can be of the form `linkText=Checkboxes`
+          6. **partialLinkText format** : Can be of the form `parialLinkText=Check`
+          7. **tagName format** : Can be of the form `tagName=input`
     3. `wait` - **(Optional)** If you feel that a particular element is either a slow loading element (or) you would 
     need to have some extra waits defined, then those go here. It can have the following attributes.
        1. `until` - We currently support only one of the following values: 

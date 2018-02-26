@@ -37,6 +37,62 @@ public enum Strategy implements StrategyTraits {
         }
     },
     /**
+     * Represents the class locating strategy.
+     */
+    CLASS {
+        @Override
+        public boolean typeMatches(String locator) {
+            return Strategy.isNotNullAndEmpty(locator) && locator.startsWith("class");
+        }
+
+        @Override
+        public By getStrategy(String locator) {
+            return By.className(locator.substring(6));
+        }
+    },
+    /**
+     * Represents the linkText locating strategy.
+     */
+    LINK_TEXT {
+        @Override
+        public boolean typeMatches(String locator) {
+            return Strategy.isNotNullAndEmpty(locator) && locator.startsWith("linkText");
+        }
+
+        @Override
+        public By getStrategy(String locator) {
+            return By.linkText(locator.substring(9));
+        }
+    },
+    /**
+     * Represents the partialLinkText locating strategy.
+     */
+    PARTIAL_LINK_TEXT {
+        @Override
+        public boolean typeMatches(String locator) {
+            return Strategy.isNotNullAndEmpty(locator) && locator.startsWith("partialLinkText");
+        }
+
+        @Override
+        public By getStrategy(String locator) {
+            return By.partialLinkText(locator.substring(16));
+        }
+    },
+    /**
+     * Represents the tagName locating strategy.
+     */
+    TAG_NAME {
+        @Override
+        public boolean typeMatches(String locator) {
+            return Strategy.isNotNullAndEmpty(locator) && locator.startsWith("tagName");
+        }
+
+        @Override
+        public By getStrategy(String locator) {
+            return By.tagName(locator.substring(8));
+        }
+    },
+    /**
      * Represents the Id/Name locating strategy.
      */
     ID_NAME {

@@ -24,6 +24,10 @@ public class StrategyTest {
                 {"/h1", By.ByXPath.class},
                 {"./h1", By.ByXPath.class},
                 {"css=", By.ByCssSelector.class},
+                {"class=", By.ByClassName.class},
+                {"linkText=", By.ByLinkText.class},
+                {"partialLinkText=", By.ByPartialLinkText.class},
+                {"tagName=", By.ByTagName.class},
                 {"foo", ByIdOrName.class}
             };
         }
