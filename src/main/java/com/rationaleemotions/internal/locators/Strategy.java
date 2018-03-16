@@ -13,13 +13,18 @@ public enum Strategy implements StrategyTraits {
     XPATH {
         @Override
         public boolean typeMatches(String locator) {
-            return Strategy.isNotNullAndEmpty(locator) &&
-                (locator.startsWith("/") || locator.startsWith("//") || locator.startsWith("."));
+            return Strategy.matches(locator, locatorType());
         }
 
         @Override
         public By getStrategy(String locator) {
-            return By.xpath(locator);
+            String value = Strategy.extractLocator(locator, locatorType());
+            return By.xpath(value);
+        }
+
+        @Override
+        public String locatorType() {
+            return "xpath";
         }
     },
     /**
@@ -28,12 +33,98 @@ public enum Strategy implements StrategyTraits {
     CSS {
         @Override
         public boolean typeMatches(String locator) {
-            return Strategy.isNotNullAndEmpty(locator) && locator.startsWith("css");
+            return Strategy.matches(locator, locatorType());
         }
 
         @Override
         public By getStrategy(String locator) {
-            return By.cssSelector(locator.substring(4));
+            String value = Strategy.extractLocator(locator, locatorType());
+            return By.cssSelector(value);
+        }
+
+        @Override
+        public String locatorType() {
+            return "css";
+        }
+    },
+    /**
+     * Represents the class locating strategy.
+     */
+    CLASS {
+        @Override
+        public boolean typeMatches(String locator) {
+            return Strategy.matches(locator, locatorType());
+        }
+
+        @Override
+        public By getStrategy(String locator) {
+            String value = Strategy.extractLocator(locator, locatorType());
+            return By.className(value);
+        }
+
+        @Override
+        public String locatorType() {
+            return "class";
+        }
+    },
+    /**
+     * Represents the linkText locating strategy.
+     */
+    LINK_TEXT {
+        @Override
+        public boolean typeMatches(String locator) {
+            return Strategy.matches(locator, locatorType());
+        }
+
+        @Override
+        public By getStrategy(String locator) {
+            String value = Strategy.extractLocator(locator, locatorType());
+            return By.linkText(value);
+        }
+
+        @Override
+        public String locatorType() {
+            return "linkText";
+        }
+    },
+    /**
+     * Represents the partialLinkText locating strategy.
+     */
+    PARTIAL_LINK_TEXT {
+        @Override
+        public boolean typeMatches(String locator) {
+            return Strategy.matches(locator, locatorType());
+        }
+
+        @Override
+        public By getStrategy(String locator) {
+            String value = Strategy.extractLocator(locator, locatorType());
+            return By.partialLinkText(value);
+        }
+
+        @Override
+        public String locatorType() {
+            return "partialLinkText";
+        }
+    },
+    /**
+     * Represents the tagName locating strategy.
+     */
+    TAG_NAME {
+        @Override
+        public boolean typeMatches(String locator) {
+            return Strategy.matches(locator, locatorType());
+        }
+
+        @Override
+        public By getStrategy(String locator) {
+            String value = Strategy.extractLocator(locator, locatorType());
+            return By.tagName(value);
+        }
+
+        @Override
+        public String locatorType() {
+            return "tagName";
         }
     },
     /**
@@ -42,18 +133,31 @@ public enum Strategy implements StrategyTraits {
     ID_NAME {
         @Override
         public boolean typeMatches(String locator) {
-            return Strategy.isNotNullAndEmpty(locator) && ((! XPATH.typeMatches(locator)) && (! CSS.typeMatches
-                (locator)));
+            return Strategy.isNotNullAndEmpty(locator) &&
+                    !locator.matches("(xpath|css|class|linkText|partialLinkText|tagName).*");
         }
 
         @Override
         public By getStrategy(String locator) {
             return new ByIdOrName(locator);
         }
+
+        @Override
+        public String locatorType() {
+            return null;
+        }
     };
 
     private static boolean isNotNullAndEmpty(String locator) {
         return locator != null && ! locator.trim().isEmpty();
+    }
+
+    private static boolean matches(String locator, String type) {
+        return Strategy.isNotNullAndEmpty(locator) && locator.toLowerCase().startsWith(type.toLowerCase());
+    }
+
+    private static String extractLocator(String locator, String type) {
+        return locator.substring(type.length() + 1);
     }
 
     /**

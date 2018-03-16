@@ -87,7 +87,18 @@ public class JsonWebElementTest {
         // For CSS
         if (expClass.equals(By.ByCssSelector.class)) {
             locator = locator.substring(4);
+        } else if (expClass.equals(By.ByClassName.class)) {
+            locator = locator.substring(6);
+        } else if (expClass.equals(By.ByLinkText.class)) {
+            locator = locator.substring(9);
+        } else if (expClass.equals(By.ByPartialLinkText.class)) {
+            locator = locator.substring(16);
+        } else if (expClass.equals(By.ByTagName.class)) {
+            locator = locator.substring(8);
+        } else if (expClass.equals(By.ByXPath.class)) {
+            locator = locator.substring(6);
         }
+
         Assert.assertTrue(actual.toString().contains(locator));
     }
 
@@ -97,11 +108,19 @@ public class JsonWebElementTest {
             //basic object creation test data
             {newJson(), "en_US", "en_US", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
             //checking if different xpath combinations yield proper results.
-            {newJson("foo", "en_US", "//h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newJson("foo", "en_US", "/h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newJson("foo", "en_US", "./h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newJson("foo", "en_US", "xpath=//h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newJson("foo", "en_US", "xpath=/h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newJson("foo", "en_US", "xpath=./h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
             //checking if css is parsed properly.
             {newJson("foo", "en_US", "css=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByCssSelector.class},
+            // checking if class is parsed properly.
+            {newJson("foo", "en_US", "class=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByClassName.class},
+            // checking if tagName is parsed properly.
+            {newJson("foo", "en_US", "tagName=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByTagName.class},
+            // checking if linkText is parsed properly.
+            {newJson("foo", "en_US", "linkText=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByLinkText.class},
+            // checking if partialLinkText is parsed properly.
+            {newJson("foo", "en_US", "partialLinkText=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByPartialLinkText.class},
             //checking if byId/byName is parsed properly.
             {newJson("foo", "en_US", "foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, ByIdOrName.class},
             //checking if Until defaults to Available when its empty (or) missing
@@ -156,6 +175,6 @@ public class JsonWebElementTest {
     }
 
     private static JsonObject newJson() {
-        return newJson("foo", "en_US", "//h1");
+        return newJson("foo", "en_US", "xpath=//h1");
     }
 }

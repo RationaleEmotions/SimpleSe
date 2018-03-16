@@ -20,7 +20,7 @@
       "locale": [
         {
           "name": "en_US",
-          "locator": "//a[text()='Checkboxes']"
+          "locator": "xpath=//a[text()='Checkboxes']"
         }
       ],
       "wait": {

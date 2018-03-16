@@ -20,10 +20,15 @@ public class StrategyTest {
     public Object[][] getTestData(Method method) {
         if (method.getName().equals("testStrategyHappyFlows")) {
             return new Object[][] {
-                {"//h1", By.ByXPath.class},
-                {"/h1", By.ByXPath.class},
-                {"./h1", By.ByXPath.class},
+                {"xpath=//h1", By.ByXPath.class},
+                {"xpath=/h1", By.ByXPath.class},
+                {"xpath=(/h1)", By.ByXPath.class},
+                {"xpath=./h1", By.ByXPath.class},
                 {"css=", By.ByCssSelector.class},
+                {"class=", By.ByClassName.class},
+                {"linkText=", By.ByLinkText.class},
+                {"partialLinkText=", By.ByPartialLinkText.class},
+                {"tagName=", By.ByTagName.class},
                 {"foo", ByIdOrName.class}
             };
         }
