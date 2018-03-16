@@ -19,4 +19,10 @@ public interface StrategyTraits {
      */
     By getStrategy(String locator);
 
+    /**
+     * Defines a locator type
+     * @return A locator type value
+     */
+    String locatorType();
+
 }

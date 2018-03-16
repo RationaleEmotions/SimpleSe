@@ -7,7 +7,7 @@
       "locale": [
         {
           "name": "en_US",
-          "locator": "//input[@type='checkbox']"
+          "locator": "xpath=//input[@type='checkbox']"
         }
       ],
       "wait": {

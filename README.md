@@ -63,11 +63,11 @@ Here's how a typical JSON file that represents the locators could look like :
       "locale": [
         {
           "name": "en_US",
-          "locator": "//h1"
+          "locator": "xpath=//h1"
         },
         {
           "name": "en_FR",
-          "locator": "//h1"
+          "locator": "xpath=//h1"
         }
       ],
       "wait": {
@@ -96,8 +96,8 @@ locators defined, then `en_US` is to be used as the fall back locale and `en_US`
        1. `name` - **(Mandatory)** The name/key of the country for which the locator is being defined.
        2. `locator` - **(Mandatory)** The actual locator which can be an xPath (or) css locator (or) id/name. Here's 
        some conventions associated with this :
-          1. **xpath format** : Can be of the form `./input[@name='first_name']` (or) `//input[@name='first_name']` 
-          (or) `/input[@name='first_name']`
+          1. **xpath format** : Can be of the form `xpath=./input[@name='first_name']` (or) `xpath=//input[@name='first_name']` 
+          (or) `xpath=/input[@name='first_name']` (or) `xpath=(//input[@class='btn'])[1]`
           2. **css format** : Can be of the form `css=input[name='first_name']`
           3. **id (or) name format** : Can be of the form `first_name` { here `first_name` can either be the `id` of 
           an element (or) the `name` of an element. }
@@ -135,7 +135,7 @@ Lets say we have the below json sample which is located in `src/test/resources/H
       "locale": [
         {
           "name": "en_US",
-          "locator": "//h1[@class='heading']"
+          "locator": "xpath=//h1[@class='heading']"
         }
       ],
       "wait": {
@@ -148,7 +148,7 @@ Lets say we have the below json sample which is located in `src/test/resources/H
       "locale": [
         {
           "name": "en_US",
-          "locator": "//a[text()='Checkboxes']"
+          "locator": "xpath=//a[text()='Checkboxes']"
         }
       ],
       "wait": {
@@ -216,7 +216,7 @@ Lets say we have a json that looks like below located at `src/test/resources/Che
       "locale": [
         {
           "name": "en_US",
-          "locator": "//input[@type='checkbox']"
+          "locator": "xpath=//input[@type='checkbox']"
         }
       ],
       "wait": {

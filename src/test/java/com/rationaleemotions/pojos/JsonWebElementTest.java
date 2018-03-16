@@ -95,6 +95,8 @@ public class JsonWebElementTest {
             locator = locator.substring(16);
         } else if (expClass.equals(By.ByTagName.class)) {
             locator = locator.substring(8);
+        } else if (expClass.equals(By.ByXPath.class)) {
+            locator = locator.substring(6);
         }
 
         Assert.assertTrue(actual.toString().contains(locator));
@@ -106,9 +108,9 @@ public class JsonWebElementTest {
             //basic object creation test data
             {newJson(), "en_US", "en_US", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
             //checking if different xpath combinations yield proper results.
-            {newJson("foo", "en_US", "//h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newJson("foo", "en_US", "/h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newJson("foo", "en_US", "./h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newJson("foo", "en_US", "xpath=//h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newJson("foo", "en_US", "xpath=/h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newJson("foo", "en_US", "xpath=./h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
             //checking if css is parsed properly.
             {newJson("foo", "en_US", "css=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByCssSelector.class},
             // checking if class is parsed properly.
@@ -173,6 +175,6 @@ public class JsonWebElementTest {
     }
 
     private static JsonObject newJson() {
-        return newJson("foo", "en_US", "//h1");
+        return newJson("foo", "en_US", "xpath=//h1");
     }
 }
