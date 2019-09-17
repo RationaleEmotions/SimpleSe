@@ -27,6 +27,15 @@
         "until": "clickable",
         "for": 10
       }
+    },
+    {
+      "name": "sampleTxtField",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//a[text()='textField']"
+        }
+      ]
     }
   ]
 }

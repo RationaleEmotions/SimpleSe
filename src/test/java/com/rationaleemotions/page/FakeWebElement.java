@@ -12,6 +12,7 @@ public class FakeWebElement implements WebElement {
 
     private Until until;
     private boolean simulateFailure;
+    private CharSequence[] keysToSend;
 
     public FakeWebElement(Until until, boolean simulateFailure) {
         this.until = until;
@@ -24,7 +25,9 @@ public class FakeWebElement implements WebElement {
     public void submit() {}
 
     @Override
-    public void sendKeys(CharSequence... keysToSend) {}
+    public void sendKeys(CharSequence... keysToSend) {
+        this.keysToSend = keysToSend;
+    }
 
     @Override
     public void clear() {}
@@ -55,7 +58,14 @@ public class FakeWebElement implements WebElement {
 
     @Override
     public String getText() {
-        return "Fake text";
+        if (keysToSend == null) {
+            return "Fake text";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (CharSequence each : keysToSend) {
+            sb.append(each);
+        }
+        return sb.toString();
     }
 
     @Override

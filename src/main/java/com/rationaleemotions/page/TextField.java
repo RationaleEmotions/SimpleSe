@@ -39,7 +39,7 @@ public final class TextField extends GenericElement {
     /**
      * @param text - The string that needs to be typed on the text field.
      */
-    public void type(String text) {
+    public void type(CharSequence text) {
         getUnderlyingElement().sendKeys(text);
     }
 

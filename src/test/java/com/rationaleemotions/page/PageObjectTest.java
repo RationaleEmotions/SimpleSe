@@ -1,6 +1,7 @@
 package com.rationaleemotions.page;
 
 import com.rationaleemotions.internal.locators.Until;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
@@ -32,7 +33,7 @@ public class PageObjectTest {
         Label heading = homePage.getLabel("heading");
         Assert.assertEquals(heading.getText(), "Fake text");
         Link checkbox = homePage.getLink("checkboxesLink");
-        Assert.assertEquals(checkbox.isDisplayed(), true);
+        Assert.assertTrue(checkbox.isDisplayed());
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class,
@@ -73,6 +74,25 @@ public class PageObjectTest {
         WebDriver driver = new FakeDriver(5, Until.Clickable, true);
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
         homePage.getLink("checkboxesLink");
+    }
+
+    @Test
+    public void testKeyPressMethodsForTextField() {
+        WebDriver driver = new FakeDriver(5, Until.Clickable);
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
+        TextField textField = homePage.getTextField("sampleTxtField");
+        textField.type(Keys.DIVIDE);
+        Assert.assertEquals(textField.getText(), Keys.DIVIDE.toString());
+    }
+
+    @Test
+    public void testKeysChordMethodsForTextField() {
+        WebDriver driver = new FakeDriver(1, Until.Clickable);
+        PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
+        TextField textField = homePage.getTextField("sampleTxtField");
+        String expected = Keys.chord(Keys.CONTROL, "a");
+        textField.type(Keys.chord(Keys.CONTROL, "a"));
+        Assert.assertEquals(textField.getText(), expected);
     }
 
 }
