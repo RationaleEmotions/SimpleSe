@@ -29,7 +29,14 @@ public class StrategyTest {
                 {"linkText=", By.ByLinkText.class},
                 {"partialLinkText=", By.ByPartialLinkText.class},
                 {"tagName=", By.ByTagName.class},
-                {"foo", ByIdOrName.class}
+                {"foo", ByIdOrName.class},
+                {"//h1", By.ByXPath.class},
+                {"//*", By.ByXPath.class},
+                {"/html/body/h1", By.ByXPath.class},
+                {"  //", By.ByXPath.class},
+                {"//label[@id='message23']", By.ByXPath.class},
+                {"./h1", By.ByXPath.class},
+                {" ./html/body/table", By.ByXPath.class}
             };
         }
         return new Object[][] {

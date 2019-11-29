@@ -98,6 +98,7 @@ locators defined, then `en_US` is to be used as the fall back locale and `en_US`
        some conventions associated with this :
           1. **xpath format** : Can be of the form `xpath=./input[@name='first_name']` (or) `xpath=//input[@name='first_name']` 
           (or) `xpath=/input[@name='first_name']` (or) `xpath=(//input[@class='btn'])[1]`
+          (or) `./input[@name='first_name']` (or) `//input[@name='first_name']` (or) `/input[@name='first_name']`
           2. **css format** : Can be of the form `css=input[name='first_name']`
           3. **id (or) name format** : Can be of the form `first_name` { here `first_name` can either be the `id` of 
           an element (or) the `name` of an element. }
@@ -136,6 +137,19 @@ Lets say we have the below json sample which is located in `src/test/resources/H
         {
           "name": "en_US",
           "locator": "xpath=//h1[@class='heading']"
+        }
+      ],
+      "wait": {
+        "until": "visible",
+        "for": 45
+      }
+    },
+    {
+      "name": "heading1",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "//h1[@class='heading1']"
         }
       ],
       "wait": {
