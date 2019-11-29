@@ -148,15 +148,20 @@ public enum Strategy implements StrategyTraits {
         }
     };
 
+    private static final String DEFAULT_REGEXP_PATTERN_XPATH_IDENTIFIER = "^(/|//|./|.//).*$";
+
     private static boolean isNotNullAndEmpty(String locator) {
         return locator != null && ! locator.trim().isEmpty();
     }
 
     private static boolean matches(String locator, String type) {
-        return Strategy.isNotNullAndEmpty(locator) && locator.toLowerCase().startsWith(type.toLowerCase());
+        return Strategy.isNotNullAndEmpty(locator) && (locator.toLowerCase().startsWith(type.toLowerCase().trim()) || locator.toLowerCase().trim().matches(DEFAULT_REGEXP_PATTERN_XPATH_IDENTIFIER));
     }
 
     private static String extractLocator(String locator, String type) {
+        if (locator.trim().matches(DEFAULT_REGEXP_PATTERN_XPATH_IDENTIFIER)) {
+            return locator;
+        }
         return locator.substring(type.length() + 1);
     }
 
