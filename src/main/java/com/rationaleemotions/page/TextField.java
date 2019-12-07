@@ -1,5 +1,7 @@
 package com.rationaleemotions.page;
 
+import static com.rationaleemotions.page.WebElementType.TEXTFIELD;
+
 import org.openqa.selenium.WebElement;
 
 /**
@@ -43,4 +45,8 @@ public final class TextField extends GenericElement {
         getUnderlyingElement().sendKeys(text);
     }
 
+    @Override
+    public WebElementType getType() {
+        return TEXTFIELD;
+    }
 }

@@ -1,5 +1,7 @@
 package com.rationaleemotions.page;
 
+import static com.rationaleemotions.page.WebElementType.LABEL;
+
 import org.openqa.selenium.WebElement;
 
 /**
@@ -16,5 +18,10 @@ public class Label extends GenericElement {
      */
     public String getText() {
         return getUnderlyingElement().getText();
+    }
+
+    @Override
+    public WebElementType getType() {
+        return LABEL;
     }
 }

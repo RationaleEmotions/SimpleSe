@@ -30,7 +30,7 @@ working with the html elements.
 
 **Simple Se Page Objects** requires that you use : 
 * **JDK 8**.
-* **Selenium 3.6.0** (or) higher. 
+* **Selenium 3.141.59** or higher. 
 
 ## How to use.
 
@@ -60,6 +60,8 @@ Here's how a typical JSON file that represents the locators could look like :
   "elements": [
     {
       "name": "bar",
+      "type": "button",
+      "isList": "true",
       "locale": [
         {
           "name": "en_US",
@@ -94,7 +96,9 @@ locators defined, then `en_US` is to be used as the fall back locale and `en_US`
     2. `locale` - **(Mandatory)** Represents the list of countries and their corresponding locators. Its attributes are
    described as below.
        1. `name` - **(Mandatory)** The name/key of the country for which the locator is being defined.
-       2. `locator` - **(Mandatory)** The actual locator which can be an xPath (or) css locator (or) id/name. Here's 
+       2. `type` - **(Optional). Defaults to `generic`** Valid values are `(button|checkbox|form|generic|image|label|link|radio|select|text)`. Helps in identifying the type of an element. Mostly useful for support tools such as code generators.
+       3. `list` -  **(Optional). Defaults to `false`**. When specified and set to `true` indicates that a particular entry represents a list of elements. Mostly useful for support tools such as code generators.
+       4. `locator` - **(Mandatory)** The actual locator which can be an xPath (or) css locator (or) id/name. Here's 
        some conventions associated with this :
           1. **xpath format** : Can be of the form `xpath=./input[@name='first_name']` (or) `xpath=//input[@name='first_name']` 
           (or) `xpath=/input[@name='first_name']` (or) `xpath=(//input[@class='btn'])[1]`

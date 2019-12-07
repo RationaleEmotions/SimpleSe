@@ -1,5 +1,7 @@
 package com.rationaleemotions.page;
 
+import static com.rationaleemotions.page.WebElementType.SELECT;
+
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
@@ -101,6 +103,11 @@ public final class SelectList extends GenericElement {
             return "";
         }
         return element.getAttribute("value");
+    }
+
+    @Override
+    public WebElementType getType() {
+        return SELECT;
     }
 
     private Select constructSelectElement() {

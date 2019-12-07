@@ -1,5 +1,7 @@
 package com.rationaleemotions.page;
 
+import static com.rationaleemotions.page.WebElementType.RADIO;
+
 import org.openqa.selenium.WebElement;
 
 /**
@@ -9,5 +11,10 @@ public final class RadioButton extends GenericElement {
 
     RadioButton(WebElement underlyingElement) {
         super(underlyingElement);
+    }
+
+    @Override
+    public WebElementType getType() {
+        return RADIO;
     }
 }

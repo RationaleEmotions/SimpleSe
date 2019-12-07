@@ -2,21 +2,24 @@ package com.rationaleemotions.pojos;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.rationaleemotions.internal.PageStore;
+import com.rationaleemotions.internal.parser.PageParser;
+import com.rationaleemotions.internal.parser.pojos.Element;
+import com.rationaleemotions.internal.parser.pojos.PageElement;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 
-public class WebPage {
+public final class WebPage {
     private String name;
     private String defaultLocale;
     private Map<String, JsonWebElement> elements = Maps.newConcurrentMap();
+
+    private WebPage() {
+        //Defeat instantiation.
+    }
 
     public static WebPage getPage(String fileName) {
         File file = new File(fileName);
@@ -26,15 +29,12 @@ public class WebPage {
             return page;
         }
         try {
-            JsonParser parser = new JsonParser();
-            JsonObject contents = parser.parse(new FileReader(fileName)).getAsJsonObject();
+            PageElement pageElement = PageParser.parsePage(fileName);
             page = new WebPage();
-            page.name = contents.get("name").getAsString();
-            page.defaultLocale = contents.get("defaultLocale").getAsString();
-            JsonArray elements = contents.get("elements").getAsJsonArray();
-            for (int i = 0; i < elements.size(); i++) {
-                JsonObject object = elements.get(i).getAsJsonObject();
-                JsonWebElement element = JsonWebElement.newElement(object, page.defaultLocale);
+            page.name = pageElement.getName();
+            page.defaultLocale = pageElement.getDefaultLocale();
+            for (Element each : pageElement.getElements()) {
+                JsonWebElement element = JsonWebElement.newElement(each, page.defaultLocale);
                 page.elements.put(element.getName(), element);
             }
             PageStore.addPage(page);

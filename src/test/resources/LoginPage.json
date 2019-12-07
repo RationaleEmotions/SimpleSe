@@ -1,0 +1,44 @@
+{
+  "name": "LoginPage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "heading",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "css=h1[class=heading]"
+        }
+      ],
+      "wait": {
+        "until": "visible",
+        "for": 10
+      }
+    },
+    {
+      "name": "checkboxesLink",
+      "list": true,
+      "type": "link",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//a[text()='Checkboxes']"
+        }
+      ],
+      "wait": {
+        "until": "clickable",
+        "for": 10
+      }
+    },
+    {
+      "name": "sampleTxtField",
+      "type": "text",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//a[text()='textField']"
+        }
+      ]
+    }
+  ]
+}

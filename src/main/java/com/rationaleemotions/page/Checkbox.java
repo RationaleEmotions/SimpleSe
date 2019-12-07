@@ -1,5 +1,7 @@
 package com.rationaleemotions.page;
 
+import static com.rationaleemotions.page.WebElementType.CHECKBOX;
+
 import org.openqa.selenium.WebElement;
 
 /**
@@ -34,5 +36,10 @@ public final class Checkbox extends GenericElement {
      */
     public boolean isChecked() {
         return isSelected();
+    }
+
+    @Override
+    public WebElementType getType() {
+        return CHECKBOX;
     }
 }

@@ -1,5 +1,7 @@
 package com.rationaleemotions.page;
 
+import static com.rationaleemotions.page.WebElementType.IMAGE;
+
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
 
@@ -17,5 +19,10 @@ public final class Image extends GenericElement {
      */
     public Dimension getSize() {
         return getUnderlyingElement().getSize();
+    }
+
+    @Override
+    public WebElementType getType() {
+        return IMAGE;
     }
 }

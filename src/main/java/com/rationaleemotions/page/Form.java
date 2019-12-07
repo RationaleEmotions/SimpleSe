@@ -1,5 +1,8 @@
 package com.rationaleemotions.page;
 
+
+import static com.rationaleemotions.page.WebElementType.FORM;
+
 import org.openqa.selenium.WebElement;
 
 /**
@@ -16,5 +19,10 @@ public final class Form extends GenericElement {
      */
     public void submit() {
         getUnderlyingElement().submit();
+    }
+
+    @Override
+    public WebElementType getType() {
+        return FORM;
     }
 }

@@ -94,5 +94,4 @@ public class PageObjectTest {
         textField.type(Keys.chord(Keys.CONTROL, "a"));
         Assert.assertEquals(textField.getText(), expected);
     }
-
 }

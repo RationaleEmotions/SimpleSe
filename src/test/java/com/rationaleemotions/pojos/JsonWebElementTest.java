@@ -1,8 +1,12 @@
 package com.rationaleemotions.pojos;
 
 import com.rationaleemotions.internal.locators.Until;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.rationaleemotions.internal.parser.pojos.Element;
+import com.rationaleemotions.internal.parser.pojos.Locale;
+import com.rationaleemotions.internal.parser.pojos.Wait;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ByIdOrName;
 import org.testng.Assert;
@@ -11,78 +15,72 @@ import org.testng.annotations.Test;
 
 public class JsonWebElementTest {
 
-    @Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = JsonWebElement.MandatoryKeys.NAME
+    @Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = MandatoryKeys.NAME
         + JsonWebElement.ATTRIBUTE_IS_MISSING)
     public void testMissingName() {
-        JsonObject object = new JsonObject();
-        JsonWebElement.newElement(object, "en_US");
+        JsonWebElement.newElement(new Element(), "en_US");
     }
 
-    @Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = JsonWebElement.MandatoryKeys.LOCALE +
+    @Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = MandatoryKeys.LOCALE +
         JsonWebElement.ATTRIBUTE_IS_MISSING)
     public void testMissingLocale() {
-        JsonObject object = new JsonObject();
-        object.addProperty(JsonWebElement.MandatoryKeys.NAME, "foo");
-        JsonWebElement.newElement(object, "en_US");
+        Element element = new Element();
+        element.setName("foo");
+        JsonWebElement.newElement(element, "en_US");
     }
 
-    @Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = JsonWebElement.MandatoryKeys.NAME +
+    @Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = MandatoryKeys.NAME +
         JsonWebElement.ATTRIBUTE_IS_MISSING)
     public void testMissingNameInLocaleObject() {
-        JsonObject localeObject = new JsonObject();
-        localeObject.addProperty(JsonWebElement.MandatoryKeys.LOCATOR, "//h1");
-        JsonObject object = new JsonObject();
-        object.addProperty(JsonWebElement.MandatoryKeys.NAME, "foo");
-        JsonArray localeArray = new JsonArray();
-        localeArray.add(localeObject);
-        object.add(JsonWebElement.MandatoryKeys.LOCALE, localeArray);
-        JsonWebElement.newElement(object, "en_US");
+        Locale locale = new Locale();
+        locale.setLocator("//h1");
+        Element element = new Element();
+        element.setName("foo");
+        element.setLocales(Collections.singletonList(locale));
+        JsonWebElement.newElement(element, "en_US");
     }
 
-    @Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = JsonWebElement.MandatoryKeys.LOCATOR +
+    @Test (expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = MandatoryKeys.LOCATOR +
         JsonWebElement.ATTRIBUTE_IS_MISSING)
     public void testMissingLocatorInLocaleObject() {
-        JsonObject localeObject = new JsonObject();
-        localeObject.addProperty(JsonWebElement.MandatoryKeys.NAME, "en_US");
-        JsonObject object = new JsonObject();
-        object.addProperty(JsonWebElement.MandatoryKeys.NAME, "foo");
-        JsonArray localeArray = new JsonArray();
-        localeArray.add(localeObject);
-        object.add(JsonWebElement.MandatoryKeys.LOCALE, localeArray);
-        JsonWebElement.newElement(object, "en_US");
+        Locale locale = new Locale();
+        locale.setName("en_US");
+        Element element = new Element();
+        element.setName("foo");
+        element.setLocales(Collections.singletonList(locale));
+        JsonWebElement.newElement(element, "en_US");
     }
 
     @Test
     public void testElementRetrievalForRequestedLocaleWhenMultipleLocalesPresent() {
-        JsonObject object = newJson();
-        JsonObject localeObject = new JsonObject();
-        localeObject.addProperty(JsonWebElement.MandatoryKeys.NAME, "en_FR");
-        localeObject.addProperty(JsonWebElement.MandatoryKeys.LOCATOR, "h2");
-        object.get(JsonWebElement.MandatoryKeys.LOCALE).getAsJsonArray().add(localeObject);
-        JsonWebElement element = JsonWebElement.newElement(object, "en_US");
+        Locale locale = new Locale();
+        locale.setName("en_FR");
+        locale.setLocator( "h2");
+        Element e = newElement();
+        e.getLocales().add(locale);
+        JsonWebElement element = JsonWebElement.newElement(e, "en_US");
         By actual = element.getLocationStrategy("en_FR");
         Assert.assertEquals(actual.getClass(), ByIdOrName.class);
     }
 
     @Test
     public void testElementRetrievalWhenRequestedLocaleNotPresentWithMultipleLocales() {
-        JsonObject object = newJson();
+        Element object = newElement();
         JsonWebElement element = JsonWebElement.newElement(object, "en_US");
         By actual = element.getLocationStrategy("en_FR");
         Assert.assertEquals(actual.getClass(), By.ByXPath.class);
     }
 
     @Test (dataProvider = "getTestData")
-    public void testNewElementCreation(JsonObject object, String defLocale, String queryLocale, Until expUntil, int
+    public void testNewElementCreation(Element object, String defLocale, String queryLocale, Until expUntil, int
         expWait, Class<By> expClass) {
         JsonWebElement element = JsonWebElement.newElement(object, defLocale);
-        Assert.assertEquals(element.getName(), object.get(JsonWebElement.MandatoryKeys.NAME).getAsString());
-        Assert.assertEquals(element.getUntil(), expUntil);
-        Assert.assertEquals(element.getWaitForSeconds(), expWait);
+        Assert.assertEquals(element.getName(), object.getName());
+        Assert.assertEquals(element.getWait().getUntil(), expUntil);
+        Assert.assertEquals(element.getWait().getDuration(), expWait);
         By actual = element.getLocationStrategy(queryLocale);
         Assert.assertEquals(actual.getClass(), expClass);
-        String locator = object.get(JsonWebElement.MandatoryKeys.LOCALE).getAsJsonArray().get(0).getAsJsonObject().get(
-            JsonWebElement.MandatoryKeys.LOCATOR).getAsString();
+        String locator = object.getLocales().get(0).getLocator();
 
         // For CSS
         if (expClass.equals(By.ByCssSelector.class)) {
@@ -106,75 +104,82 @@ public class JsonWebElementTest {
     public Object[][] getTestData() {
         return new Object[][] {
             //basic object creation test data
-            {newJson(), "en_US", "en_US", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElement(), "en_US", "en_US", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
             //checking if different xpath combinations yield proper results.
-            {newJson("foo", "en_US", "xpath=//h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newJson("foo", "en_US", "xpath=/h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newJson("foo", "en_US", "xpath=./h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElement("xpath=//h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElement("xpath=/h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElement("xpath=./h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
             //checking if css is parsed properly.
-            {newJson("foo", "en_US", "css=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByCssSelector.class},
+            {newElement("css=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByCssSelector.class},
             // checking if class is parsed properly.
-            {newJson("foo", "en_US", "class=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByClassName.class},
+            {newElement("class=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByClassName.class},
             // checking if tagName is parsed properly.
-            {newJson("foo", "en_US", "tagName=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByTagName.class},
+            {newElement("tagName=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByTagName.class},
             // checking if linkText is parsed properly.
-            {newJson("foo", "en_US", "linkText=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByLinkText.class},
+            {newElement("linkText=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByLinkText.class},
             // checking if partialLinkText is parsed properly.
-            {newJson("foo", "en_US", "partialLinkText=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByPartialLinkText.class},
+            {newElement("partialLinkText=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByPartialLinkText.class},
             //checking if byId/byName is parsed properly.
-            {newJson("foo", "en_US", "foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, ByIdOrName.class},
+            {newElement("foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, ByIdOrName.class},
             //checking if Until defaults to Available when its empty (or) missing
-            {newJson("", 10), "en_US", "fr_FR", Until.Available, 10, By.ByXPath.class},
-            {newJsonWithout(JsonWebElement.WaitAttributes.UNTIL, "25"), "en_US", "en_US", Until.Available, 25, By.ByXPath.class},
+            {newElement("", 10), "en_US", "fr_FR", Until.Available, 10, By.ByXPath.class},
+            {newElementWithout(WaitAttributes.UNTIL, "25"), "en_US", "en_US", Until.Available, 25, By.ByXPath.class},
             //checking if other custom values for until are parsed properly.
-            {newJson(Until.Clickable.name(), 10), "en_US", "fr_FR", Until.Clickable, 10, By.ByXPath.class},
+            {newElement(Until.Clickable.name(), 10), "en_US", "fr_FR", Until.Clickable, 10, By.ByXPath.class},
             //checking if time defaults to default wait time if its less than zero (or) when its missing
-            {newJson(Until.Clickable.name(), 0), "en_US", "fr_FR", Until.Clickable, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newJsonWithout(JsonWebElement.WaitAttributes.FOR, Until.Visible.name()), "en_US", "en_US", Until.Visible, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class}
+            {newElement(Until.Clickable.name(), 0), "en_US", "fr_FR", Until.Clickable, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElementWithout(WaitAttributes.FOR, Until.Visible.name()), "en_US", "en_US", Until.Visible, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class}
         };
     }
 
-    private static JsonObject newJsonWithout(String attrib, String val) {
-        JsonObject json = newJson();
-        JsonObject wait = new JsonObject();
+    private static Element newElementWithout(String attrib, String val) {
+        Element element = newElement();
+
+        Wait wait = new Wait();
         switch (attrib) {
-            case JsonWebElement.WaitAttributes.UNTIL:
-                wait.addProperty(JsonWebElement.WaitAttributes.FOR, Integer.parseInt(val));
+            case WaitAttributes.UNTIL:
+                wait.setDuration(Integer.parseInt(val));
                 break;
-            case JsonWebElement.WaitAttributes.FOR:
-                wait.addProperty(JsonWebElement.WaitAttributes.UNTIL, Until.parse(val).name());
+            case WaitAttributes.FOR:
+                wait.setUntil(val);
         }
-        json.add(JsonWebElement.OptionalKeys.WAIT, wait);
-        return json;
-    }
-
-    private static JsonObject newJson(String until, int time) {
-        JsonObject json = newJson();
-        json.add(JsonWebElement.OptionalKeys.WAIT, newWait(until, time));
-        return json;
-    }
-
-    private static JsonObject newWait(String until, int time) {
-        JsonObject object = new JsonObject();
-        object.addProperty(JsonWebElement.WaitAttributes.UNTIL, until);
-        object.addProperty(JsonWebElement.WaitAttributes.FOR, time);
-        return object;
-    }
-
-    private static JsonObject newJson(String name, String locale, String locator) {
-        JsonObject localeObject = new JsonObject();
-        localeObject.addProperty(JsonWebElement.MandatoryKeys.NAME, locale);
-        localeObject.addProperty(JsonWebElement.MandatoryKeys.LOCATOR, locator);
-
-        JsonArray locales = new JsonArray();
-        locales.add(localeObject);
-        JsonObject element = new JsonObject();
-        element.addProperty(JsonWebElement.MandatoryKeys.NAME, name);
-        element.add(JsonWebElement.MandatoryKeys.LOCALE, locales);
+        element.setWait(wait);
         return element;
     }
 
-    private static JsonObject newJson() {
-        return newJson("foo", "en_US", "xpath=//h1");
+    private static Element newElement(String until, int time) {
+        Element element = newElement();
+        Wait wait = new Wait();
+        wait.setUntil(until);
+        wait.setDuration(time);
+        element.setWait(wait);
+        return element;
+    }
+
+    private static Element newElement(String locator) {
+        Locale l = new Locale();
+        l.setName("en_US");
+        l.setLocator(locator);
+        Element element = new Element();
+        element.setName("foo");
+        List<Locale> locales = new ArrayList<>();
+        locales.add(l);
+        element.setLocales(locales);
+        return element;
+    }
+
+    private static Element newElement() {
+        return newElement("xpath=//h1");
+    }
+
+    interface MandatoryKeys {
+        String NAME = "name";
+        String LOCALE = "locale";
+        String LOCATOR = "locator";
+    }
+
+    interface WaitAttributes {
+        String UNTIL = "until";
+        String FOR = "for";
     }
 }

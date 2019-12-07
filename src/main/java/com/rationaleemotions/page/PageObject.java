@@ -1,7 +1,6 @@
 package com.rationaleemotions.page;
 
-import com.google.common.base.Preconditions;
-import com.rationaleemotions.internal.locators.Until;
+import com.rationaleemotions.internal.parser.pojos.Wait;
 import com.rationaleemotions.pojos.JsonWebElement;
 import com.rationaleemotions.pojos.WebPage;
 import com.google.common.collect.Lists;
@@ -24,6 +23,7 @@ import java.util.List;
  * Houses all the logic required for loading a json file, parsing it, initialising location strategies
  * based on the values provided in the json file and also in constructing different html elements.
  */
+@SuppressWarnings("unused")
 public final class PageObject {
     private SearchContext context;
     private String jsonFileSource;
@@ -225,16 +225,16 @@ public final class PageObject {
         return locale;
     }
 
-    private final <E> E getElement(String fieldName, Class<E> clazz) {
+    private <E> E getElement(String fieldName, Class<E> clazz) {
         WebElement webElement = newRawElement(getJsonWebElement(fieldName)).getWebElement();
-        return (E) newInstance(clazz, webElement);
+        return newInstance(clazz, webElement);
     }
 
-    private final <E> List<E> getElements(String fieldName, Class<E> clazz) {
+    private <E> List<E> getElements(String fieldName, Class<E> clazz) {
         List<WebElement> webElements = newRawElement(getJsonWebElement(fieldName)).getWebElements();
         List<E> elements = Lists.newArrayList();
         for (WebElement webElement : webElements) {
-            E e = (E) newInstance(clazz, webElement);
+            E e = newInstance(clazz, webElement);
             elements.add(e);
         }
         return elements;
@@ -253,7 +253,7 @@ public final class PageObject {
     }
 
     private JsonWebElement getJsonWebElement(String fieldName) {
-        if (fieldName == null || fieldName.trim().isEmpty()) {
+        if (StringUtils.isBlank(fieldName)) {
             throw new IllegalArgumentException("A field name cannot be null (or) empty");
         }
         initLazily();
@@ -266,15 +266,15 @@ public final class PageObject {
     }
 
     private RawElement newRawElement(JsonWebElement element) {
-        DecoratedSearchContext context = new DecoratedSearchContext(this.context, element.getUntil(), element
-            .getWaitForSeconds());
+        DecoratedSearchContext context = new DecoratedSearchContext(this.context, element.getWait());
         return new RawElement(context, element, getLocale());
     }
 
-    private static Object newInstance(Class<?> clazz, WebElement webElement) {
+    @SuppressWarnings("unchecked")
+    private static <E> E newInstance(Class<E> clazz, WebElement webElement) {
         try {
-            Constructor constructor = Class.forName(clazz.getName()).getDeclaredConstructor(WebElement.class);
-            return constructor.newInstance(webElement);
+            Constructor<?> constructor = Class.forName(clazz.getName()).getDeclaredConstructor(WebElement.class);
+            return (E) constructor.newInstance(webElement);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException
             | ClassNotFoundException e) {
             throw new IllegalStateException(e);
@@ -282,20 +282,18 @@ public final class PageObject {
     }
 
     private static class DecoratedSearchContext implements SearchContext {
-        private SearchContext context;
-        private Until until;
-        private int timeInSeconds;
+        private final SearchContext context;
+        private final Wait wait;
 
-        DecoratedSearchContext(SearchContext context, Until until, int timeInSeconds) {
+        DecoratedSearchContext(SearchContext context, Wait wait) {
             this.context = context;
-            this.until = until;
-            this.timeInSeconds = timeInSeconds;
+            this.wait = wait;
         }
 
         @Override
         public List<WebElement> findElements(By by) {
             List<WebElement> elementsToReturn = new ArrayList<>();
-            switch (until) {
+            switch (wait.getUntil()) {
                 case Clickable:
                     for (WebElement element : context.findElements(by)) {
                         elementsToReturn.add(apply(ExpectedConditions.elementToBeClickable(element)));
@@ -313,7 +311,7 @@ public final class PageObject {
         @Override
         public WebElement findElement(By by) {
             WebElement elementToReturn;
-            switch (until) {
+            switch (wait.getUntil()) {
                 case Clickable:
                     elementToReturn = apply(ExpectedConditions.elementToBeClickable(by));
                     break;
@@ -327,11 +325,15 @@ public final class PageObject {
         }
 
         private WebElement apply(ExpectedCondition<WebElement> condition) {
-            return new WebDriverWait((WebDriver) this.context, timeInSeconds).until(condition);
+            return new WebDriverWait((WebDriver) this.context, wait.getDuration()).until(condition);
+            //TODO: Once we move over to using Selenium 4, uncomment this.
+            //return new WebDriverWait((WebDriver) this.context, Duration.ofSeconds(wait.getDuration())).until(condition);
         }
 
         private List<WebElement> applyToList(ExpectedCondition<List<WebElement>> condition) {
-            return new WebDriverWait((WebDriver) this.context, timeInSeconds).until(condition);
+            return new WebDriverWait((WebDriver) this.context, wait.getDuration()).until(condition);
+            //TODO: Once we move over to using Selenium 4, uncomment this.
+            //return new WebDriverWait((WebDriver) this.context, Duration.ofSeconds(wait.getDuration())).until(condition);
         }
     }
 }

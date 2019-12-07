@@ -1,11 +1,13 @@
 package com.rationaleemotions.page;
 
+import static com.rationaleemotions.page.WebElementType.GENERIC;
+
 import org.openqa.selenium.WebElement;
 
 /**
  * A wrapper class that represents a generic/custom html elements.
  */
-public class GenericElement {
+public class GenericElement implements ElementType {
     private WebElement underlyingElement;
 
     GenericElement(WebElement underlyingElement) {
@@ -45,5 +47,9 @@ public class GenericElement {
      */
     public final void click() {
         getUnderlyingElement().click();
+    }
+
+    public WebElementType getType() {
+        return GENERIC;
     }
 }
