@@ -61,7 +61,7 @@ Here's how a typical JSON file that represents the locators could look like :
     {
       "name": "bar",
       "type": "button",
-      "isList": "true",
+      "list": true,
       "locale": [
         {
           "name": "en_US",
