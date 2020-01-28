@@ -8,7 +8,7 @@
             <class name="com.rationaleemotions.pojos.JsonWebElementTest"/>
             <class name="com.rationaleemotions.internal.locators.UntilTest"/>
             <class name="com.rationaleemotions.page.PageObjectTest"/>
+            <class name="com.rationaleemotions.page.WaitConditionsTest"/>
         </classes>
     </test>
-
 </suite>

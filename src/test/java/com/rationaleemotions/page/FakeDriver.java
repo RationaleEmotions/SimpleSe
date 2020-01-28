@@ -111,6 +111,7 @@ public class FakeDriver implements WebDriver {
             TimeUnit.SECONDS.sleep(delay);
             System.err.println("Woke up after sleeping for " + delay + " seconds.");
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }

@@ -1,0 +1,19 @@
+{
+  "name": "FooPage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "bar",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "xpath=//h1"
+        }
+      ]
+    }
+  ]
+}

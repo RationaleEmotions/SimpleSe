@@ -123,8 +123,10 @@ locators defined, then `en_US` is to be used as the fall back locale and `en_US`
           * `Clickable` - **(case in-sensitive)** Waits for the element to be **available** in the Dom and also to be
            **clickable**. Its functionally equivalent to `ExpectedConditions#elementToBeClickable`.
        2. `for` - An integer that represents the wait time in **seconds**. If no value is specified (or) if this 
-       attribute is omitted but `until` is included, the system falls back to `45 seconds.` This value can be altered
-        globally via the JVM argument `default.wait.time`.
+       attribute is omitted but `until` is included, the system falls back to `45 seconds.`
+          * This value can be altered
+        globally via the JVM argument `simplese.default.waittime` (for e.g., `-Dsimplese.default.waittime=30`).
+          * If for any reason wait is to be completely ignored, then the wait node can be excluded from the json file and instruct **SimpleSe** to ignore using a default wait mechanism by setting the JVM argument `-Dsimplese.default.waitstrategy=false`
 
 ## Some code samples.
 

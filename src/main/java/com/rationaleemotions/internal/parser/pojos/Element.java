@@ -3,6 +3,7 @@ package com.rationaleemotions.internal.parser.pojos;
 import com.google.common.base.Preconditions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.rationaleemotions.internal.JvmArgs;
 import com.rationaleemotions.page.WebElementType;
 import com.rationaleemotions.utils.StringUtils;
 import java.util.LinkedList;
@@ -25,7 +26,7 @@ public class Element {
 
   @SerializedName("wait")
   @Expose
-  private Wait wait = Wait.defaultInstance();
+  private Wait wait;
 
   @SerializedName("list")
   @Expose
@@ -56,6 +57,9 @@ public class Element {
   }
 
   public Wait getWait() {
+    if (JvmArgs.USE_DEFAULT_WAIT_STRATEGY.asBoolean() && wait == null) {
+      return Wait.defaultInstance();
+    }
     return wait;
   }
 

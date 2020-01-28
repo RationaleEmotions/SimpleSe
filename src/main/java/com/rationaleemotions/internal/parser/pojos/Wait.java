@@ -53,6 +53,10 @@ public class Wait {
     return Objects.hash(until, duration);
   }
 
+  public boolean isValid() {
+    return getUntil() != null && getDuration() > 0;
+  }
+
   public static Wait defaultInstance() {
     Wait wait = new Wait();
     wait.setDuration(defaultWait);

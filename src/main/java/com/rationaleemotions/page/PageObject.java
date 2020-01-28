@@ -292,6 +292,9 @@ public final class PageObject {
 
         @Override
         public List<WebElement> findElements(By by) {
+            if (wait == null) {
+                return context.findElements(by);
+            }
             List<WebElement> elementsToReturn = new ArrayList<>();
             switch (wait.getUntil()) {
                 case Clickable:
@@ -310,6 +313,9 @@ public final class PageObject {
 
         @Override
         public WebElement findElement(By by) {
+            if (wait == null) {
+                return context.findElement(by);
+            }
             WebElement elementToReturn;
             switch (wait.getUntil()) {
                 case Clickable:
