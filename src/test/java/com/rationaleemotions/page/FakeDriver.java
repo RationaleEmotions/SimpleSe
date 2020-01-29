@@ -52,15 +52,13 @@ public class FakeDriver implements WebDriver {
     @Override
     public List<WebElement> findElements(By by) {
         List<WebElement> elements = Lists.newArrayList();
-        sleep();
-        elements.add(new FakeWebElement(until, simulateFailure));
+        elements.add(new FakeWebElement(until, simulateFailure, delay));
         return elements;
     }
 
     @Override
     public WebElement findElement(By by) {
-        sleep();
-        return new FakeWebElement(until, simulateFailure);
+        return new FakeWebElement(until, simulateFailure, delay);
     }
 
     @Override
@@ -101,17 +99,5 @@ public class FakeDriver implements WebDriver {
     @Override
     public Options manage() {
         return null;
-    }
-
-    private void sleep() {
-        if (delay == 0) {
-            return;
-        }
-        try {
-            TimeUnit.SECONDS.sleep(delay);
-            System.err.println("Woke up after sleeping for " + delay + " seconds.");
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 }

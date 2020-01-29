@@ -128,6 +128,134 @@ locators defined, then `en_US` is to be used as the fall back locale and `en_US`
         globally via the JVM argument `simplese.default.waittime` (for e.g., `-Dsimplese.default.waittime=30`).
           * If for any reason wait is to be completely ignored, then the wait node can be excluded from the json file and instruct **SimpleSe** to ignore using a default wait mechanism by setting the JVM argument `-Dsimplese.default.waitstrategy=false`
 
+### Handling Waits.
+
+There are basically 3 types of scenarios with waits.
+
+1. **Scenario #1 (You want a global implicit wait to be applied across all page objects without you explicitly mentioning it in your json file)**
+
+The json could look like below:
+
+```json
+{
+  "name": "FooPage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "bar",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "xpath=//h1"
+        }
+      ]
+    }
+  ]
+}
+```
+In this case, `SimpleSe` will default to a wait fo 45 seconds for the element to be present in the DOM before timing out. This default value can be changed using the JVM argument `-Dsimplese.default.waittime=30` (we changed the default wait time from 45 seconds to 30 seconds) 
+
+2. **Scenario #2 (You want to globally disable implicit wait by not having it in your json files)**
+
+In this case, for all elements wherein the `wait` attribute is missing in your json file, then wait will be skipped from being applied only for that element. Make sure you turn on this behavior via the JVM argument `-Dsimplese.default.waitstrategy=false`.
+
+The json could look like below:
+
+```json
+{
+  "name": "FooPage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "bar",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "xpath=//h1"
+        }
+      ]
+    }
+  ]
+}
+```
+
+3. **Scenario #3 (You want to turn off implicit waits only for a few elements**
+
+In this case, for some elements, you want to use the implicit wait strategy, for some elements, you want to use an explicit wait strategy and for some elements you want to disable the wait strategy completely.
+
+Here's how the json would look like:
+
+```json
+{
+  "name": "FooPage",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "bar",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "xpath=//h1"
+        }
+      ]
+    },
+    {
+      "name": "foo",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "xpath=//h1"
+        }
+      ],
+      "wait": {
+        "until": "clickable",
+        "for": 20
+      }
+    },
+    {
+      "name": "foobar",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "xpath=//h1"
+        }
+      ],
+      "wait": {
+        "until": "clickable",
+        "for": -1
+      }
+    }
+  ]
+}
+```
+
+Here:
+
+* The `bar` element uses the implicit wait strategy (wait for 45 seconds for the element to be available in DOM)
+* The `foo` element uses the explicit wait strategy (wait for 20 seconds for the element to be clickable)
+* The `foobar` element disables the wait strategy by mentioning the wait time as `-1`
+
+
 ## Some code samples.
 
 Lets say we have the below json sample which is located in `src/test/resources/HomePage.json`. 

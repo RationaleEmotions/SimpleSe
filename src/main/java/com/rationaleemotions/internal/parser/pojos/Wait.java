@@ -59,6 +59,7 @@ public class Wait {
 
   public static Wait defaultInstance() {
     Wait wait = new Wait();
+    wait.setUntil(Until.Available.name());
     wait.setDuration(defaultWait);
     return wait;
   }

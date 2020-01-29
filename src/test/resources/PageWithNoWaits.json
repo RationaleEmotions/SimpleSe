@@ -14,6 +14,40 @@
           "locator": "xpath=//h1"
         }
       ]
+    },
+    {
+      "name": "foo",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "xpath=//h1"
+        }
+      ],
+      "wait": {
+        "until": "clickable",
+        "for": 20
+      }
+    },
+    {
+      "name": "foobar",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "xpath=//h1"
+        },
+        {
+          "name": "en_FR",
+          "locator": "xpath=//h1"
+        }
+      ],
+      "wait": {
+        "until": "clickable",
+        "for": -1
+      }
     }
   ]
 }

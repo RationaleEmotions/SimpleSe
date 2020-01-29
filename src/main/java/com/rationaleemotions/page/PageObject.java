@@ -292,7 +292,7 @@ public final class PageObject {
 
         @Override
         public List<WebElement> findElements(By by) {
-            if (wait == null) {
+            if (wait == null || !wait.isValid()) {
                 return context.findElements(by);
             }
             List<WebElement> elementsToReturn = new ArrayList<>();
@@ -313,7 +313,7 @@ public final class PageObject {
 
         @Override
         public WebElement findElement(By by) {
-            if (wait == null) {
+            if (wait == null || !wait.isValid()) {
                 return context.findElement(by);
             }
             WebElement elementToReturn;

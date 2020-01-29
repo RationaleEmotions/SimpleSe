@@ -1,6 +1,7 @@
 package com.rationaleemotions.page;
 
 import com.rationaleemotions.internal.locators.Until;
+import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.*;
 
 import java.util.List;
@@ -10,14 +11,17 @@ import java.util.List;
  */
 public class FakeWebElement implements WebElement {
 
-    private Until until;
-    private boolean simulateFailure;
+    private final Until until;
+    private final boolean simulateFailure;
+    private final int sleepTime;
     private CharSequence[] keysToSend;
 
-    public FakeWebElement(Until until, boolean simulateFailure) {
+    public FakeWebElement(Until until, boolean simulateFailure, int sleepTime) {
         this.until = until;
         this.simulateFailure = simulateFailure;
+        this.sleepTime = sleepTime;
     }
+
     @Override
     public void click() {}
 
@@ -53,6 +57,7 @@ public class FakeWebElement implements WebElement {
             //This is set only when we want to simulate failures for our tests.
             return false;
         }
+        sleep();
         return true;
     }
 
@@ -110,5 +115,17 @@ public class FakeWebElement implements WebElement {
     @Override
     public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
         return null;
+    }
+
+    private void sleep() {
+        if (sleepTime <= 0) {
+            return;
+        }
+        try {
+            TimeUnit.SECONDS.sleep(sleepTime);
+            System.err.println("Woke up after sleeping for " + sleepTime + " seconds.");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
