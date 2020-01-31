@@ -1,6 +1,8 @@
 package com.rationaleemotions.page;
 
-import com.rationaleemotions.internal.locators.Until;
+import com.rationaleemotions.internal.locators.DefaultWaitConditions;
+import com.rationaleemotions.internal.locators.WaitCondition;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.*;
 
@@ -11,13 +13,13 @@ import java.util.List;
  */
 public class FakeWebElement implements WebElement {
 
-    private final Until until;
+    private final WaitCondition waitCondition;
     private final boolean simulateFailure;
     private final int sleepTime;
     private CharSequence[] keysToSend;
 
-    public FakeWebElement(Until until, boolean simulateFailure, int sleepTime) {
-        this.until = until;
+    public FakeWebElement(WaitCondition waitCondition, boolean simulateFailure, int sleepTime) {
+        this.waitCondition = waitCondition;
         this.simulateFailure = simulateFailure;
         this.sleepTime = sleepTime;
     }
@@ -53,7 +55,7 @@ public class FakeWebElement implements WebElement {
 
     @Override
     public boolean isEnabled() {
-        if (until == Until.Clickable) {
+        if (waitCondition != null && waitCondition.equals(DefaultWaitConditions.CLICKABLE)) {
             //This is set only when we want to simulate failures for our tests.
             return false;
         }
@@ -85,7 +87,7 @@ public class FakeWebElement implements WebElement {
 
     @Override
     public boolean isDisplayed() {
-        if (until == Until.Visible && simulateFailure) {
+        if (waitCondition != null && waitCondition.equals(DefaultWaitConditions.VISIBLE) && simulateFailure) {
             //This is set only when we want to simulate failures for our tests.
             return false;
         }

@@ -2,7 +2,7 @@ package com.rationaleemotions.page;
 
 import com.google.common.base.Stopwatch;
 import com.rationaleemotions.internal.JvmArgs;
-import com.rationaleemotions.internal.locators.Until;
+import com.rationaleemotions.internal.locators.DefaultWaitConditions;
 import java.time.Duration;
 import org.openqa.selenium.WebDriver;
 
@@ -54,7 +54,7 @@ public class WaitConditionsTest {
   @Test(dataProvider = "dp")
   public void testPageObjectsWithAllWaitsMixed(int wait, String element, int expectedSeconds) {
     System.setProperty(JvmArgs.USE_DEFAULT_WAIT_STRATEGY.toString(), "true");
-    WebDriver driver = new FakeDriver(wait, Until.Available);
+    WebDriver driver = new FakeDriver(wait, DefaultWaitConditions.AVAILABLE);
     PageObject page = new PageObject(driver, "src/test/resources/PageWithNoWaits.json");
     Stopwatch watch = Stopwatch.createStarted();
     page.getGenericElement(element);

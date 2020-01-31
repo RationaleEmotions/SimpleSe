@@ -2,7 +2,9 @@ package com.rationaleemotions.internal.parser.pojos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.rationaleemotions.internal.locators.Until;
+import com.rationaleemotions.internal.locators.DefaultWaitConditions;
+import com.rationaleemotions.internal.locators.WaitCondition;
+import com.rationaleemotions.internal.locators.WaitServiceListener;
 import java.util.Objects;
 
 public class Wait {
@@ -17,8 +19,8 @@ public class Wait {
   @Expose
   private int duration = defaultWait;
 
-  public Until getUntil() {
-    return Until.parse(until);
+  public WaitCondition getWaitCondition() {
+    return WaitServiceListener.parse(until);
   }
 
   public void setUntil(String until) {
@@ -54,12 +56,20 @@ public class Wait {
   }
 
   public boolean isValid() {
-    return getUntil() != null && getDuration() > 0;
+    return getWaitCondition() != null && getDuration() > 0;
+  }
+
+  public boolean isElementConditionValid() {
+    return isValid() && getWaitCondition().element(null) != null;
+  }
+
+  public boolean isElementsConditionValid() {
+    return isValid() && getWaitCondition().elements(null) != null;
   }
 
   public static Wait defaultInstance() {
     Wait wait = new Wait();
-    wait.setUntil(Until.Available.name());
+    wait.setUntil(DefaultWaitConditions.AVAILABLE.getName());
     wait.setDuration(defaultWait);
     return wait;
   }

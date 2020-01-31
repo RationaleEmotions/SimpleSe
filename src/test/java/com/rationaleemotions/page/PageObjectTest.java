@@ -1,6 +1,6 @@
 package com.rationaleemotions.page;
 
-import com.rationaleemotions.internal.locators.Until;
+import com.rationaleemotions.internal.locators.DefaultWaitConditions;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -54,7 +54,7 @@ public class PageObjectTest {
 
     @Test
     public void testFindElementWithWaits() {
-        WebDriver driver = new FakeDriver(2, Until.Visible);
+        WebDriver driver = new FakeDriver(2, DefaultWaitConditions.CLICKABLE);
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
         Label heading = homePage.getLabel("heading");
         Assert.assertEquals(heading.getText(), "Fake text");
@@ -63,7 +63,7 @@ public class PageObjectTest {
     @Test(expectedExceptions = TimeoutException.class,
             expectedExceptionsMessageRegExp = "Expected condition failed: waiting for visibility of element located .*")
     public void testFindElementsWithWaitsTimingOutVisibilityCondition() {
-        WebDriver driver = new FakeDriver(5, Until.Visible, true);
+        WebDriver driver = new FakeDriver(5, DefaultWaitConditions.VISIBLE, true);
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
         homePage.getLabel("heading");
     }
@@ -71,14 +71,14 @@ public class PageObjectTest {
     @Test(expectedExceptions = TimeoutException.class,
             expectedExceptionsMessageRegExp = "Expected condition failed: waiting for element to be clickable.*")
     public void testFindElementsWithWaitsTimingoutClickableCondition() {
-        WebDriver driver = new FakeDriver(5, Until.Clickable, true);
+        WebDriver driver = new FakeDriver(5, DefaultWaitConditions.CLICKABLE, true);
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
         homePage.getLink("checkboxesLink");
     }
 
     @Test
     public void testKeyPressMethodsForTextField() {
-        WebDriver driver = new FakeDriver(5, Until.Clickable);
+        WebDriver driver = new FakeDriver(5, DefaultWaitConditions.CLICKABLE);
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
         TextField textField = homePage.getTextField("sampleTxtField");
         textField.type(Keys.DIVIDE);
@@ -87,7 +87,7 @@ public class PageObjectTest {
 
     @Test
     public void testKeysChordMethodsForTextField() {
-        WebDriver driver = new FakeDriver(1, Until.Clickable);
+        WebDriver driver = new FakeDriver(1, DefaultWaitConditions.CLICKABLE);
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
         TextField textField = homePage.getTextField("sampleTxtField");
         String expected = Keys.chord(Keys.CONTROL, "a");

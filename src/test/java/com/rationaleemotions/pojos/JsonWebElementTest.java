@@ -1,6 +1,8 @@
 package com.rationaleemotions.pojos;
 
-import com.rationaleemotions.internal.locators.Until;
+import com.rationaleemotions.internal.locators.DefaultWaitConditions;
+import com.rationaleemotions.internal.locators.WaitCondition;
+import com.rationaleemotions.internal.locators.WaitServiceListener;
 import com.rationaleemotions.internal.parser.pojos.Element;
 import com.rationaleemotions.internal.parser.pojos.Locale;
 import com.rationaleemotions.internal.parser.pojos.Wait;
@@ -72,11 +74,11 @@ public class JsonWebElementTest {
     }
 
     @Test (dataProvider = "getTestData")
-    public void testNewElementCreation(Element object, String defLocale, String queryLocale, Until expUntil, int
+    public void testNewElementCreation(Element object, String defLocale, String queryLocale, WaitCondition waitCondition, int
         expWait, Class<By> expClass) {
         JsonWebElement element = JsonWebElement.newElement(object, defLocale);
         Assert.assertEquals(element.getName(), object.getName());
-        Assert.assertEquals(element.getWait().getUntil(), expUntil);
+        Assert.assertEquals(element.getWait().getWaitCondition(), waitCondition);
         Assert.assertEquals(element.getWait().getDuration(), expWait);
         By actual = element.getLocationStrategy(queryLocale);
         Assert.assertEquals(actual.getClass(), expClass);
@@ -102,33 +104,36 @@ public class JsonWebElementTest {
 
     @DataProvider
     public Object[][] getTestData() {
+        WaitCondition available = DefaultWaitConditions.AVAILABLE;
+        WaitCondition visible = DefaultWaitConditions.VISIBLE;
+        WaitCondition clickable = DefaultWaitConditions.CLICKABLE;
         return new Object[][] {
             //basic object creation test data
-            {newElement(), "en_US", "en_US", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElement(), "en_US", "en_US", available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
             //checking if different xpath combinations yield proper results.
-            {newElement("xpath=//h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newElement("xpath=/h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newElement("xpath=./h1"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElement("xpath=//h1"), "en_US", "fr_FR", available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElement("xpath=/h1"), "en_US", "fr_FR", available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElement("xpath=./h1"), "en_US", "fr_FR", available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
             //checking if css is parsed properly.
-            {newElement("css=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByCssSelector.class},
+            {newElement("css=foo"), "en_US", "fr_FR", available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByCssSelector.class},
             // checking if class is parsed properly.
-            {newElement("class=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByClassName.class},
+            {newElement("class=foo"), "en_US", "fr_FR", available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByClassName.class},
             // checking if tagName is parsed properly.
-            {newElement("tagName=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByTagName.class},
+            {newElement("tagName=foo"), "en_US", "fr_FR", available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByTagName.class},
             // checking if linkText is parsed properly.
-            {newElement("linkText=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByLinkText.class},
+            {newElement("linkText=foo"), "en_US", "fr_FR", available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByLinkText.class},
             // checking if partialLinkText is parsed properly.
-            {newElement("partialLinkText=foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByPartialLinkText.class},
+            {newElement("partialLinkText=foo"), "en_US", "fr_FR", available, JsonWebElement.DEFAULT_WAIT_TIME, By.ByPartialLinkText.class},
             //checking if byId/byName is parsed properly.
-            {newElement("foo"), "en_US", "fr_FR", Until.Available, JsonWebElement.DEFAULT_WAIT_TIME, ByIdOrName.class},
+            {newElement("foo"), "en_US", "fr_FR", available, JsonWebElement.DEFAULT_WAIT_TIME, ByIdOrName.class},
             //checking if Until defaults to Available when its empty (or) missing
-            {newElement("", 10), "en_US", "fr_FR", Until.Available, 10, By.ByXPath.class},
-            {newElementWithout(WaitAttributes.UNTIL, "25"), "en_US", "en_US", Until.Available, 25, By.ByXPath.class},
+            {newElement("", 10), "en_US", "fr_FR", available, 10, By.ByXPath.class},
+            {newElementWithout(WaitAttributes.UNTIL, "25"), "en_US", "en_US", available, 25, By.ByXPath.class},
             //checking if other custom values for until are parsed properly.
-            {newElement(Until.Clickable.name(), 10), "en_US", "fr_FR", Until.Clickable, 10, By.ByXPath.class},
+            {newElement(clickable.getName(), 10), "en_US", "fr_FR", clickable, 10, By.ByXPath.class},
             //checking if time defaults to default wait time if its less than zero (or) when its missing
-            {newElement(Until.Clickable.name(), 0), "en_US", "fr_FR", Until.Clickable, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
-            {newElementWithout(WaitAttributes.FOR, Until.Visible.name()), "en_US", "en_US", Until.Visible, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class}
+            {newElement(clickable.getName(), 0), "en_US", "fr_FR", clickable, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class},
+            {newElementWithout(WaitAttributes.FOR, visible.getName()), "en_US", "en_US", visible, JsonWebElement.DEFAULT_WAIT_TIME, By.ByXPath.class}
         };
     }
 
