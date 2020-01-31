@@ -1,5 +1,6 @@
 package com.rationaleemotions.page;
 
+import com.rationaleemotions.internal.locators.WaitCondition;
 import com.rationaleemotions.internal.parser.pojos.Wait;
 import com.rationaleemotions.pojos.JsonWebElement;
 import com.rationaleemotions.pojos.WebPage;
@@ -10,7 +11,6 @@ import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.lang.reflect.Constructor;
@@ -292,41 +292,23 @@ public final class PageObject {
 
         @Override
         public List<WebElement> findElements(By by) {
-            if (wait == null || !wait.isValid()) {
+            if (wait == null || !wait.isElementsConditionValid()) {
                 return context.findElements(by);
             }
-            List<WebElement> elementsToReturn = new ArrayList<>();
-            switch (wait.getUntil()) {
-                case Clickable:
-                    for (WebElement element : context.findElements(by)) {
-                        elementsToReturn.add(apply(ExpectedConditions.elementToBeClickable(element)));
-                    }
-                    break;
-                case Visible:
-                    elementsToReturn = applyToList(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
-                    break;
-                default:
-                    elementsToReturn = applyToList(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
-            }
+            WaitCondition waitCondition = wait.getWaitCondition();
+            ExpectedCondition condition = waitCondition.elements(by);
+            List<WebElement> elementsToReturn = applyToList(condition);
             return elementsToReturn;
         }
 
         @Override
         public WebElement findElement(By by) {
-            if (wait == null || !wait.isValid()) {
+            if (wait == null || !wait.isElementConditionValid()) {
                 return context.findElement(by);
             }
-            WebElement elementToReturn;
-            switch (wait.getUntil()) {
-                case Clickable:
-                    elementToReturn = apply(ExpectedConditions.elementToBeClickable(by));
-                    break;
-                case Visible:
-                    elementToReturn = apply(ExpectedConditions.visibilityOfElementLocated(by));
-                    break;
-                default:
-                    elementToReturn = apply(ExpectedConditions.presenceOfElementLocated(by));
-            }
+            WaitCondition waitCondition = wait.getWaitCondition();
+            ExpectedCondition condition = waitCondition.element(by);
+            WebElement elementToReturn = apply(condition);
             return elementToReturn;
         }
 
