@@ -1,0 +1,3 @@
+com.rationaleemotions.internal.locators.TestConditions$PresenceCondition
+com.rationaleemotions.internal.locators.TestConditions$NullCondition
+com.rationaleemotions.internal.locators.TestConditions$PartialNullCondition

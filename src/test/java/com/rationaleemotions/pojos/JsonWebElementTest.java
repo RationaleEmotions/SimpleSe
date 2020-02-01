@@ -2,7 +2,6 @@ package com.rationaleemotions.pojos;
 
 import com.rationaleemotions.internal.locators.DefaultWaitConditions;
 import com.rationaleemotions.internal.locators.WaitCondition;
-import com.rationaleemotions.internal.locators.WaitServiceListener;
 import com.rationaleemotions.internal.parser.pojos.Element;
 import com.rationaleemotions.internal.parser.pojos.Locale;
 import com.rationaleemotions.internal.parser.pojos.Wait;

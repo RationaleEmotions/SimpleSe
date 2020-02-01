@@ -15,9 +15,9 @@ public class WaitServiceListener {
         return conditions;
     }
 
-    public static WaitCondition parse(String condition) {
+    public static WaitCondition parse(String name) {
         return getConditions().stream()
-            .filter(e-> e.getName().equalsIgnoreCase(condition))
+            .filter(e-> e.getName().equalsIgnoreCase(name))
             .findFirst()
             .orElse(DefaultWaitConditions.AVAILABLE);
     }
@@ -32,7 +32,7 @@ public class WaitServiceListener {
             boolean exists = conditions.stream()
                 .anyMatch(e -> e.getName().equals(condition.getName()));
             if (exists) {
-                String message = condition.getName() + " is already added";
+                String message = condition.getName() + " condition is already added";
                 throw new RuntimeException(message);
             } else {
                 conditions.add(condition);
