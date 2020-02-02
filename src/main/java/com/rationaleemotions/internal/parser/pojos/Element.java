@@ -79,4 +79,15 @@ public class Element {
     Preconditions.checkArgument(StringUtils.isNotBlank(name), "name" + ATTRIBUTE_IS_MISSING);
     Preconditions.checkArgument(!locales.isEmpty(), "locale" + ATTRIBUTE_IS_MISSING);
   }
+
+  @Override
+  public String toString() {
+    return "Element{" +
+        "name='" + name + '\'' +
+        ", type='" + type + '\'' +
+        ", locales=" + locales +
+        ", wait=" + wait +
+        ", isList=" + isList +
+        '}';
+  }
 }

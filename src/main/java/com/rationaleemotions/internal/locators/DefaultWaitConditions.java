@@ -8,18 +8,16 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public final class DefaultWaitConditions {
 
-    public static final WaitCondition<WebElement> AVAILABLE = new AvailableWaitCondition();
+    public static final WaitCondition AVAILABLE = new AvailableWaitCondition();
 
-    public static final WaitCondition<WebElement> VISIBLE = new VisibleWaitCondition();
+    public static final WaitCondition VISIBLE = new VisibleWaitCondition();
 
-    public static final WaitCondition<WebElement> CLICKABLE = new ClickableWaitCondition();
-
+    public static final WaitCondition CLICKABLE = new ClickableWaitCondition();
 
     private DefaultWaitConditions() {
-
     }
 
-    static class AvailableWaitCondition implements WaitCondition<WebElement> {
+    static class AvailableWaitCondition implements WaitCondition {
 
         public String getName() {
             return "AVAILABLE";
@@ -34,7 +32,7 @@ public final class DefaultWaitConditions {
         }
     }
 
-    static class VisibleWaitCondition implements WaitCondition<WebElement> {
+    static class VisibleWaitCondition implements WaitCondition {
 
         public String getName() {
             return "VISIBLE";
@@ -49,7 +47,7 @@ public final class DefaultWaitConditions {
         }
     }
 
-    static class ClickableWaitCondition implements WaitCondition<WebElement> {
+    static class ClickableWaitCondition implements WaitCondition {
 
         public String getName() {
             return "CLICKABLE";

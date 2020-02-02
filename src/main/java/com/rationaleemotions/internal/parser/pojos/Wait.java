@@ -1,10 +1,11 @@
 package com.rationaleemotions.internal.parser.pojos;
 
+import static com.rationaleemotions.internal.locators.WaitServiceListener.INSTANCE;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.rationaleemotions.internal.locators.DefaultWaitConditions;
 import com.rationaleemotions.internal.locators.WaitCondition;
-import com.rationaleemotions.internal.locators.WaitServiceListener;
 import java.util.Objects;
 
 public class Wait {
@@ -20,7 +21,7 @@ public class Wait {
   private int duration = defaultWait;
 
   public WaitCondition getWaitCondition() {
-    return WaitServiceListener.parse(until);
+    return INSTANCE.parse(until);
   }
 
   public void setUntil(String until) {
@@ -65,6 +66,14 @@ public class Wait {
 
   public boolean isElementsConditionValid() {
     return isValid() && getWaitCondition().elements(null) != null;
+  }
+
+  @Override
+  public String toString() {
+    return "Wait{" +
+        "until='" + until + '\'' +
+        ", duration=" + duration +
+        '}';
   }
 
   public static Wait defaultInstance() {

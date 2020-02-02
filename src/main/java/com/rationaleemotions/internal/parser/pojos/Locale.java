@@ -39,5 +39,11 @@ public class Locale {
     checkArgument(StringUtils.isNotBlank(locator), "locator" + ATTRIBUTE_IS_MISSING);
   }
 
-
+  @Override
+  public String toString() {
+    return "Locale{" +
+        "name='" + name + '\'' +
+        ", locator='" + locator + '\'' +
+        '}';
+  }
 }

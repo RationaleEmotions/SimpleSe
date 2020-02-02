@@ -1,5 +1,7 @@
 package com.rationaleemotions.internal.locators;
 
+import static com.rationaleemotions.internal.locators.WaitServiceListener.INSTANCE;
+
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -8,7 +10,7 @@ public class DefaultConditionTest {
 
     @Test(dataProvider = "getTestData")
     public void testAllCombinations(String rawText, WaitCondition expected) {
-        Assert.assertEquals(WaitServiceListener.parse(rawText), expected);
+        Assert.assertEquals(INSTANCE.parse(rawText), expected);
     }
 
     @DataProvider

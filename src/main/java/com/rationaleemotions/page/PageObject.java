@@ -15,7 +15,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -296,9 +295,8 @@ public final class PageObject {
                 return context.findElements(by);
             }
             WaitCondition waitCondition = wait.getWaitCondition();
-            ExpectedCondition condition = waitCondition.elements(by);
-            List<WebElement> elementsToReturn = applyToList(condition);
-            return elementsToReturn;
+            ExpectedCondition<List<WebElement>> condition = waitCondition.elements(by);
+            return applyToList(condition);
         }
 
         @Override
@@ -307,9 +305,8 @@ public final class PageObject {
                 return context.findElement(by);
             }
             WaitCondition waitCondition = wait.getWaitCondition();
-            ExpectedCondition condition = waitCondition.element(by);
-            WebElement elementToReturn = apply(condition);
-            return elementToReturn;
+            ExpectedCondition<WebElement> condition = waitCondition.element(by);
+            return apply(condition);
         }
 
         private WebElement apply(ExpectedCondition<WebElement> condition) {

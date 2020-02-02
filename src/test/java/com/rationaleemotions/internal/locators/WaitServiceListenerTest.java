@@ -1,5 +1,7 @@
 package com.rationaleemotions.internal.locators;
 
+import static com.rationaleemotions.internal.locators.WaitServiceListener.INSTANCE;
+
 import com.rationaleemotions.internal.parser.pojos.Wait;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -35,13 +37,13 @@ public class WaitServiceListenerTest {
 
     @Test(dataProvider = "getPositiveTestData")
     public void testConditionParseHappyFlow(String name) {
-        WaitCondition condition = WaitServiceListener.parse(name);
+        WaitCondition condition = INSTANCE.parse(name);
         Assert.assertNotNull(condition);
     }
 
     @Test(dataProvider = "getNegativeTestData")
     public void testConditionParseNegativeFlow(String name) {
-        WaitCondition condition = WaitServiceListener.parse(name);
+        WaitCondition condition = INSTANCE.parse(name);
         Assert.assertEquals(condition.getName(), DefaultWaitConditions.AVAILABLE.getName());
     }
 

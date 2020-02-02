@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class TestConditions {
 
-    public static class PresenceCondition implements WaitCondition<WebElement> {
+    public static class PresenceCondition implements WaitCondition {
 
         @Override
         public String getName() {
@@ -25,7 +25,7 @@ public class TestConditions {
             return ExpectedConditions.presenceOfAllElementsLocatedBy(by);
         }
     }
-    public static class NullCondition implements WaitCondition<WebElement> {
+    public static class NullCondition implements WaitCondition {
 
         @Override
         public String getName() {
@@ -43,7 +43,7 @@ public class TestConditions {
         }
     }
 
-    public static class PartialNullCondition implements WaitCondition<WebElement> {
+    public static class PartialNullCondition implements WaitCondition {
 
         @Override
         public String getName() {
