@@ -15,5 +15,5 @@ jobs:
           java-version: '8'
           distribution: 'corretto'
           cache: maven
-      - name: Compile Project With Maven
-        run: mvn clean test-compile
+      - name: Run tests
+        run: mvn clean test
