@@ -6,6 +6,7 @@ import com.rationaleemotions.pojos.JsonWebElement;
 import com.rationaleemotions.pojos.WebPage;
 import com.google.common.collect.Lists;
 import com.rationaleemotions.utils.StringUtils;
+import java.time.Duration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
@@ -310,15 +311,11 @@ public final class PageObject {
         }
 
         private WebElement apply(ExpectedCondition<WebElement> condition) {
-            return new WebDriverWait((WebDriver) this.context, wait.getDuration()).until(condition);
-            //TODO: Once we move over to using Selenium 4, uncomment this.
-            //return new WebDriverWait((WebDriver) this.context, Duration.ofSeconds(wait.getDuration())).until(condition);
+            return new WebDriverWait((WebDriver) this.context, Duration.ofSeconds(wait.getDuration())).until(condition);
         }
 
         private List<WebElement> applyToList(ExpectedCondition<List<WebElement>> condition) {
-            return new WebDriverWait((WebDriver) this.context, wait.getDuration()).until(condition);
-            //TODO: Once we move over to using Selenium 4, uncomment this.
-            //return new WebDriverWait((WebDriver) this.context, Duration.ofSeconds(wait.getDuration())).until(condition);
+            return new WebDriverWait((WebDriver) this.context, Duration.ofSeconds(wait.getDuration())).until(condition);
         }
     }
 }

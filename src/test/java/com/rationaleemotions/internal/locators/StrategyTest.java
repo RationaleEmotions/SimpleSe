@@ -28,7 +28,7 @@ public class StrategyTest {
                 {"class=", By.ByClassName.class},
                 {"linkText=", By.ByLinkText.class},
                 {"partialLinkText=", By.ByPartialLinkText.class},
-                {"tagName=", By.ByTagName.class},
+                {"tagName=a", By.ByTagName.class},
                 {"foo", ByIdOrName.class},
                 {"//h1", By.ByXPath.class},
                 {"//*", By.ByXPath.class},
