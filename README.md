@@ -30,7 +30,7 @@ working with the html elements.
 
 **Simple Se Page Objects** requires that you use : 
 * **JDK 8**.
-* **Selenium 3.141.59** or higher. 
+* **Selenium 4.4.0** or higher. 
 
 ## How to use.
 
@@ -484,7 +484,7 @@ With the above page object locators using accessibility id appended with `#` at 
 The below java class depicts the click operation on login button as,
 
 ```java
-import com.rationaleemotions.page.Label;
+import com.rationaleemotions.page.Button;
 import com.rationaleemotions.page.PageObject;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -520,8 +520,8 @@ public class AppLauncherTest {
   @Test
   public void launchApp() {
     PageObject loginPage = new PageObject(driver, "src/test/resources/login-page.json");
-    Label heading = loginPage.getLabel("loginButton");
-    heading.click();
+    Button loginButton = loginPage.getButton("loginButton");
+    loginButton.click();
   }
 
   @AfterMethod
