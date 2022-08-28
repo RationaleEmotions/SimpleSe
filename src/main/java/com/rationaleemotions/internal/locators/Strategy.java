@@ -1,5 +1,6 @@
 package com.rationaleemotions.internal.locators;
 
+import io.appium.java_client.AppiumBy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ByIdOrName;
 
@@ -134,7 +135,7 @@ public enum Strategy implements StrategyTraits {
         @Override
         public boolean typeMatches(String locator) {
             return Strategy.isNotNullAndEmpty(locator) &&
-                    !locator.matches("(xpath|css|class|linkText|partialLinkText|tagName).*");
+                    !locator.matches("(xpath|css|class|linkText|partialLinkText|tagName|#).*");
         }
 
         @Override
@@ -146,9 +147,31 @@ public enum Strategy implements StrategyTraits {
         public String locatorType() {
             return null;
         }
+    },
+    /**
+     * Represents the accessibility id locating strategy to support mobile app automation.
+     */
+    ACCESSIBILITY_ID {
+        @Override
+        public boolean typeMatches(String locator) {
+            return Strategy.isNotNullAndEmpty(locator) &&
+                Strategy.matches(locator, locatorType());
+        }
+
+        @Override
+        public By getStrategy(String locator) {
+            String value = Strategy.extractLocator(locator, locatorType());
+            return AppiumBy.accessibilityId(value);
+        }
+
+        @Override
+        public String locatorType() {
+            return "#";
+        }
     };
 
     private static final String DEFAULT_REGEXP_PATTERN_XPATH_IDENTIFIER = "^(/|//|./|.//).*$";
+    private static final String DEFAULT_REGEXP_PATTERN_ACCESSIBILITY_IDENTIFIER = "^(#).*$";
 
     private static boolean isNotNullAndEmpty(String locator) {
         return locator != null && ! locator.trim().isEmpty();
@@ -161,6 +184,8 @@ public enum Strategy implements StrategyTraits {
     private static String extractLocator(String locator, String type) {
         if (locator.trim().matches(DEFAULT_REGEXP_PATTERN_XPATH_IDENTIFIER)) {
             return locator;
+        } else if (locator.trim().matches(DEFAULT_REGEXP_PATTERN_ACCESSIBILITY_IDENTIFIER)) {
+            return locator.substring(type.length());
         }
         return locator.substring(type.length() + 1);
     }

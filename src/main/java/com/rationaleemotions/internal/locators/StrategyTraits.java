@@ -24,5 +24,4 @@ public interface StrategyTraits {
      * @return A locator type value
      */
     String locatorType();
-
 }

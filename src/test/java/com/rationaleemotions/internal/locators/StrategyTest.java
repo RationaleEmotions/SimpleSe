@@ -1,12 +1,12 @@
 package com.rationaleemotions.internal.locators;
 
+import io.appium.java_client.AppiumBy;
+import java.lang.reflect.Method;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ByIdOrName;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.lang.reflect.Method;
 
 public class StrategyTest {
     @Test (dataProvider = "getTestData")
@@ -36,7 +36,8 @@ public class StrategyTest {
                 {"  //", By.ByXPath.class},
                 {"//label[@id='message23']", By.ByXPath.class},
                 {"./h1", By.ByXPath.class},
-                {" ./html/body/table", By.ByXPath.class}
+                {" ./html/body/table", By.ByXPath.class},
+                {"#a", AppiumBy.ByAccessibilityId.class}
             };
         }
         return new Object[][] {

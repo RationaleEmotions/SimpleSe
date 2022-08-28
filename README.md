@@ -457,3 +457,76 @@ public class HerokkuAppTest {
     }
 }
 ```
+
+## Mobile Automation Support with Accessibility ID locator strategy
+
+In order to support mobile app automation with accessibility id locator strategy using appium, please refer to the below JSON file that have a button with name as `loginButton` with accessibility id as `loginButton` and the corresponding Page Object JSON mapping at, `src/test/resources/login-page.json` looks like as below,
+```json
+{
+  "name": "Home",
+  "defaultLocale": "en_US",
+  "elements": [
+    {
+      "name": "loginButton",
+      "locale": [
+        {
+          "name": "en_US",
+          "locator": "#loginButton"
+        }
+      ]
+    }
+  ]
+}
+```
+
+With the above page object locators using accessibility id appended with `#` at `elements[0].locale[0].locator`, the same can be used as a reference with Java class to perform different user behaviour operations like click, input text, clear text, etc,
+
+The below java class depicts the click operation on login button as,
+
+```java
+import com.rationaleemotions.page.Label;
+import com.rationaleemotions.page.PageObject;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.time.Duration;
+import org.openqa.selenium.Platform;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class AppLauncherTest {
+
+  private AndroidDriver driver;
+  private static final String APP_PACKAGE_NAME = "";
+  private static final String APP_ACTIVITY_NAME = "";
+
+  @BeforeMethod
+  public void init() throws MalformedURLException {
+    UiAutomator2Options options = new UiAutomator2Options()
+        .setPlatformName(Platform.ANDROID.name())
+        .setAppPackage(APP_PACKAGE_NAME)
+        .setAppActivity(APP_ACTIVITY_NAME)
+        .eventTimings();
+    driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), options);
+    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+  }
+
+  /**
+   * The same operation as below is the step definition for click operation on login button as,
+   * driver.findElement(AppiumBy.accessibilityId("loginButton")).click();
+   * */
+  @Test
+  public void launchApp() {
+    PageObject loginPage = new PageObject(driver, "src/test/resources/login-page.json");
+    Label heading = loginPage.getLabel("loginButton");
+    heading.click();
+  }
+
+  @AfterMethod
+  public void quit() {
+    driver.quit();
+  }
+}
+```
