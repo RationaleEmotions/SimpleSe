@@ -9,10 +9,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 public final class DefaultWaitConditions {
 
     public static final WaitCondition AVAILABLE = new AvailableWaitCondition();
-
     public static final WaitCondition VISIBLE = new VisibleWaitCondition();
-
     public static final WaitCondition CLICKABLE = new ClickableWaitCondition();
+    public static final WaitCondition REFRESHED = new RefreshedWaitCondition();
 
     private DefaultWaitConditions() {
     }
@@ -55,6 +54,21 @@ public final class DefaultWaitConditions {
 
         public ExpectedCondition<WebElement> element(By by) {
             return ExpectedConditions.elementToBeClickable(by);
+        }
+
+        public ExpectedCondition<List<WebElement>> elements(By by) {
+            return null;
+        }
+    }
+
+    static class RefreshedWaitCondition implements WaitCondition {
+
+        public String getName() {
+            return "REFRESHED";
+        }
+
+        public ExpectedCondition<WebElement> element(By by) {
+            return ExpectedConditions.refreshed(ExpectedConditions.presenceOfElementLocated(by));
         }
 
         public ExpectedCondition<List<WebElement>> elements(By by) {

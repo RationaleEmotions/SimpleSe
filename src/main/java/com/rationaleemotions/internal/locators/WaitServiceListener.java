@@ -2,6 +2,7 @@ package com.rationaleemotions.internal.locators;
 
 import static com.rationaleemotions.internal.locators.DefaultWaitConditions.AVAILABLE;
 import static com.rationaleemotions.internal.locators.DefaultWaitConditions.CLICKABLE;
+import static com.rationaleemotions.internal.locators.DefaultWaitConditions.REFRESHED;
 import static com.rationaleemotions.internal.locators.DefaultWaitConditions.VISIBLE;
 
 import java.util.HashMap;
@@ -20,6 +21,7 @@ public enum WaitServiceListener {
         conditions.put(AVAILABLE.getName().toLowerCase(), AVAILABLE);
         conditions.put(VISIBLE.getName().toLowerCase(), VISIBLE);
         conditions.put(CLICKABLE.getName().toLowerCase(), CLICKABLE);
+        conditions.put(REFRESHED.getName().toLowerCase(), REFRESHED);
         for (WaitCondition condition : listeners) {
             Objects.requireNonNull(condition.getName());
             if (conditions.containsKey(condition.getName())) {

@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
  * A wrapper class that represents a generic/custom html elements.
  */
 public class GenericElement implements ElementType {
-    private WebElement underlyingElement;
+    private final WebElement underlyingElement;
 
     GenericElement(WebElement underlyingElement) {
         this.underlyingElement = underlyingElement;
