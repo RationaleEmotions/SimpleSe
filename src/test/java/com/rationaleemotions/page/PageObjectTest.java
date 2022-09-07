@@ -70,7 +70,7 @@ public class PageObjectTest {
 
     @Test(expectedExceptions = TimeoutException.class,
             expectedExceptionsMessageRegExp = "Expected condition failed: waiting for element to be clickable.*")
-    public void testFindElementsWithWaitsTimingoutClickableCondition() {
+    public void testFindElementsWithWaitsTimingOutClickableCondition() {
         WebDriver driver = new FakeDriver(5, DefaultWaitConditions.CLICKABLE, true);
         PageObject homePage = new PageObject(driver, "src/test/resources/HomePage.json");
         homePage.getLink("checkboxesLink");
